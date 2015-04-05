@@ -8,5 +8,5 @@ class AIFood(AIObject):
 		name: type of food
 	"""
 
-	def __init__(self, name):
-		super(AIFood, self).__init__(name)
+	def __init__(self, name, position):
+		super(AIFood, self).__init__(name, position)

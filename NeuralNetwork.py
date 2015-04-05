@@ -13,4 +13,4 @@ class NeuralNetwork(object):
 		return self.genome
 
 	def evaluate(self, input_variables):
-		raise NotImplementedError("Passes inputs intp neural network and decide action")
+		raise NotImplementedError("Passes inputs into neural network and decide action")
