@@ -11,7 +11,7 @@ class NeuralNetwork(object):
 		None
 
 	"""
-	def __init__(self, genome):
+	def __init__(self, genome = None):
 		self.genome = genome
 		self.network = None
 

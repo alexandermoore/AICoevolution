@@ -85,7 +85,7 @@ class AIEnvironment(object):
 		food_map = self.food_mappings[0]
 		for i in range(numA):
 			(x,y) = self.generatePosition(grid)
-			network = NeuralNetwork("GENOME")
+			network = NeuralNetwork()
 			animal = AIAnimal(network, food_map, SPECIES_A, (x,y))
 			self.animals.append(animal)
 
@@ -95,7 +95,7 @@ class AIEnvironment(object):
 		food_map = self.food_mappings[1]
 		for i in range(numB):
 			(x,y) = self.generatePosition(grid)
-			network = NeuralNetwork("GENOME")
+			network = NeuralNetwork()
 			animal = AIAnimal(network, food_map, SPECIES_B, (x,y))
 			self.animals.append(animal)
 
