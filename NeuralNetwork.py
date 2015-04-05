@@ -1,6 +1,7 @@
 INPUT_NODES = 32
 NODES_PER_HIDDEN_LAYER = [5]
 OUTPUT_NODES = 5
+import random as r
 
 class NeuralNetwork(object):
 	"""
@@ -18,4 +19,4 @@ class NeuralNetwork(object):
 		return self.genome
 
 	def evaluate(self, input_variables):
-		raise NotImplementedError("Passes inputs into neural network and decide action")
+		return r.randint(0, 4)

@@ -3,6 +3,7 @@ from AIAnimal import *
 from AIFood import *
 from NeuralNetwork import *
 from util import *
+from NeuralNetworkEvolver import *
 import random as r
 import time
 
@@ -26,6 +27,7 @@ class AIEnvironment(object):
 
 		super(AIEnvironment, self).__init__()
 		self.food_mappings = food_mappings
+		self.evolver = NeuralNetworkEvolver()
 
 	def generatePosition(self, grid):
 		"""
@@ -102,7 +104,6 @@ class AIEnvironment(object):
 		# Place food on world
 		for i in range(numFood1):
 			(x,y) = self.generatePosition(grid)
-			network = NeuralNetwork("GENOME")
 			food = AIFood(FOOD_1, (x,y))
 			self.food.append(food)
 

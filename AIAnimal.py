@@ -70,7 +70,7 @@ class AIAnimal(AIObject):
 			elif (obj.getType() == FOOD_2):
 				input_variables[i*4 + 3] += 1
 
-		move = r.randint(0,4)
+		move = self.network.evaluate(input_variables)
 
 		if move == 4:
 			self.points -= 1
