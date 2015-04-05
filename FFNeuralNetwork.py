@@ -25,12 +25,12 @@ class FFNeuralNetwork(object):
 
 		# Create input nodes
 		for i in range(n_input):
-			node = self.__gen_node("IN #" + str(i))
+			node = self.__genNode("IN #" + str(i))
 			self.input_layer.append(node)
 
 		# Create output nodes
 		for i in range(n_output):
-			node = self.__gen_node("OUT #" + str(i))
+			node = self.__genNode("OUT #" + str(i))
 			self.output_layer.append(node)
 
 		# Create hidden layer nodes
@@ -39,22 +39,22 @@ class FFNeuralNetwork(object):
 
 			# Create each node in hidden layer
 			for j in range(n_hidden[i]):
-				node = self.__gen_node("HIDE #(%d,%d)" % (i, j))
+				node = self.__genNode("HIDE #(%d,%d)" % (i, j))
 				hidden.append(node)
 
 				# If first hidden layer, inputs are input layer
 				if i == 0:
 					node["incoming"] = self.input_layer
-					node["incoming_w"] = [self.__init_weight() for _ in range(n_input)]
+					node["incoming_w"] = [self.__initWeight() for _ in range(n_input)]
 				# Otherwise inputs are previous hidden layer
 				else:
 					node["incoming"] = self.hidden_layers[i - 1]
-					node["incoming_w"] = [self.__init_weight() for _ in range(n_hidden[i-1])]
+					node["incoming_w"] = [self.__initWeight() for _ in range(n_hidden[i-1])]
 
 				# If last hidden layer, outputs are output layer
 				if i == n_hidden_layers - 1:
 					node["outgoing"] = self.output_layer
-					node["outgoing_w"] = [self.__init_weight() for _ in range(n_output)]
+					node["outgoing_w"] = [self.__initWeight() for _ in range(n_output)]
 
 			# Link previous layer to this one
 			if i == 0:
@@ -63,7 +63,7 @@ class FFNeuralNetwork(object):
 				prev_layer = self.hidden_layers[i-1]
 			for node_prev in prev_layer:
 				node_prev["outgoing"] = hidden
-				node_prev["outgoing_w"] = [self.__init_weight() for _ in range(n_hidden[i])]
+				node_prev["outgoing_w"] = [self.__initWeight() for _ in range(n_hidden[i])]
 
 			# Add this hidden layer to list of hidden layers
 			self.hidden_layers.append(hidden)
@@ -71,7 +71,7 @@ class FFNeuralNetwork(object):
 		# Link output nodes to last hidden layer
 		for node in self.output_layer:
 			node["incoming"] = self.hidden_layers[-1]
-			node["incoming_w"] = [self.__init_weight() for _ in range(n_hidden[-1])]
+			node["incoming_w"] = [self.__initWeight() for _ in range(n_hidden[-1])]
 
 
 	def __sigmoid(self,x):
@@ -84,18 +84,54 @@ class FFNeuralNetwork(object):
 	def __activate(self, x):
 		return self.activate_fn(x)
 
-	def __output_activate(self, x):
+	def __outputActivate(self, x):
 		return self.outputactivate_fn(x)
 
 
-	def __init_weight(self):
+	def __initWeight(self):
 		"""
 		Returns a random value for weight initialization of network
 		"""
 		return -1 + 2 * random.random()
 
+	def getWeights(self):
+		"""
+		Returns a flattened list of incoming weights for each node. The ordering is:
+		[Hidden0.0_w0, ..., Hidden0.0_wD, ... ,Hidden0.N_w0,..., Hidden0.N_wD, HiddenK.N_w0, ..., HiddenK.N_wD, Output0_w1,...,Output0_wD]
+		"""
+		weights = []
 
-	def __gen_node(self, name):
+		# Iterate over all hidden layers
+		for layer in self.hidden_layers:
+			for node in layer:
+				weights.extend(node["incoming_w"])
+		# Iterate over output layer
+		for node in self.output_layer:
+			weights.extend(node["incoming_w"])
+
+		return weights
+
+
+	def setWeights(self, weights):
+		cursor = 0
+		n_hidden_layers = len(self.hidden_layers)
+		n_output_nodes = len(self.output_layer)
+
+		# Set all hidden layers
+		for layer in self.hidden_layers:
+			for node in layer:
+				num_weights = len(node["incoming_w"])
+				node["incoming_w"] = weights[cursor:(cursor + num_weights)]
+				cursor += num_weights
+
+		# Set all output layers
+		for node in self.output_layer:
+			num_weights = len(node["incoming_w"])
+			node["incoming_w"] = weights[cursor:(cursor + num_weights)]
+			cursor += num_weights
+
+
+	def __genNode(self, name):
 		"""
 		Generates a new node
 			Structure of a node:
@@ -110,7 +146,7 @@ class FFNeuralNetwork(object):
 		outgoing and outgoing_w may not actually be necessary at all.
 	"""
 
-	def send_signal(self, input_values):
+	def sendSignal(self, input_values):
 		n_inputs = len(self.input_layer)
 		n_hidden_layers = len(self.hidden_layers)
 		n_outputs = len(self.output_layer)
@@ -130,17 +166,25 @@ class FFNeuralNetwork(object):
 		output_values = []
 		for node in self.output_layer:
 			incoming_values = [node["incoming"][n]["value"] * node["incoming_w"][n] for n in range(len(node["incoming"]))]
-			node["value"] = self.__output_activate(sum(incoming_values))
+			node["value"] = self.__outputActivate(sum(incoming_values))
 			output_values.append(node["value"])
 
 		return output_values
 
 if __name__ == "__main__":
+	NN = FFNeuralNetwork(5,[25,35,22],5)
+	print(NN.sendSignal([1,2,3,4,5]))
+	weights = NN.getWeights()
+	# print(weights)
+	NN.setWeights(weights)
+	print(NN.sendSignal([1,2,3,4,5]))
+	quit()
+
 	NN = FFNeuralNetwork(2,[2],1)
 	NN.hidden_layers[0][0]["incoming_w"] = [7,3]
 	NN.hidden_layers[0][1]["incoming_w"] = [2,4]
 	NN.output_layer[0]["incoming_w"] = [2.5, 3.2]
-	print(NN.send_signal([2,3]))
+	print(NN.sendSignal([2,3]))
 	for n in (NN.input_layer + [l for j in range(len(NN.hidden_layers)) for l in NN.hidden_layers[j]] + NN.output_layer):
 		print(n["name"], n["value"])
 		print("    ", [d["name"] for d in n["incoming"]] )
