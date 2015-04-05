@@ -2,13 +2,11 @@ from AIObject import *
 from AIAnimal import *
 from AIFood import *
 from NeuralNetwork import *
+from util import *
 import random as r
 import time
 
-SPECIES_A = "spA"
-SPECIES_B = "spB"
-FOOD_1 = "fd1"
-FOOD_2 = "fd2"
+
 
 class AIEnvironment(object):
 	"""

@@ -1,4 +1,5 @@
 from AIObject import *
+from util import *
 import random as r
 
 class AIAnimal(AIObject):
@@ -26,7 +27,7 @@ class AIAnimal(AIObject):
 		self.mapping = mapping
 
 
-	def run(self, input):
+	def run(self, ins):
 		"""
 		Have animal make decision about what to do
 
@@ -44,6 +45,30 @@ class AIAnimal(AIObject):
 		Raise:
 			None
 		"""
+
+		(x,y) = self.getPosition()
+		length = len(ins)
+
+		env = [(x-1,y-1), (x, y-1), (x+1, y-1), (x-1, y), (x+1, y), (x-1, y+1), (x, y+1), (x+1, y+1)]
+
+		env = list(map((lambda x: (x[0] % length, x[1] % length)), env))
+
+		input_variables = [0] * 32
+
+		for i in range(len(env)):
+			(x,y) = env[i]
+			obj = ins[x][y]
+
+			if (obj == None):
+				continue
+			elif (obj.getType() == SPECIES_A):
+				input_variables[i*4 + 0] += 1
+			elif (obj.getType() == SPECIES_B):
+				input_variables[i*4 + 1] += 1
+			elif (obj.getType() == FOOD_1):
+				input_variables[i*4 + 2] += 1
+			elif (obj.getType() == FOOD_2):
+				input_variables[i*4 + 3] += 1
 
 		move = r.randint(0,4)
 
