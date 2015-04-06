@@ -1,9 +1,7 @@
 from AIObject import *
 from AIAnimal import *
 from AIFood import *
-from NeuralNetwork import *
 from util import *
-from NeuralNetworkEvolver import *
 import random as r
 import time
 
@@ -27,7 +25,6 @@ class AIEnvironment(object):
 
 		super(AIEnvironment, self).__init__()
 		self.food_mappings = food_mappings
-		self.evolver = NeuralNetworkEvolver()
 
 	def generatePosition(self, grid):
 		"""
@@ -58,19 +55,22 @@ class AIEnvironment(object):
 		return (x,y)
 
 
-	def generate(self, grid, numA, numB, numFood1, numFood2, steps = 5, seed = None):
+	def generate(self, grid, spA, spB, numFood1, numFood2, steps = 5, seed = None):
 		"""
 		Initialize one instance of the game world
 
 		Args:
 			grid: height and width of the game world
-			numA: number of species A
-			numB: number of species B
+			spA: specication for species A (num, network)
+			spB: specication for species B (num, network)
 			numFood1: number of food source 1
 			numFood2: number of food source 2
 			steps: number of steps to run simulation
 			seed: seed for random numbers, default None (current system time)
 		"""
+
+		numA, networkA = spA
+		numB, networkB = spB
 
 		# Initialize game world
 		self.animals = []
@@ -81,12 +81,14 @@ class AIEnvironment(object):
 		# Set seed for world
 		r.seed(seed)
 
+		# Declare start of simulation
+		print("Generating New World: ")
+
 		# Place speciesA on world
 		food_map = self.food_mappings[0]
 		for i in range(numA):
 			(x,y) = self.generatePosition(grid)
-			network = NeuralNetwork()
-			animal = AIAnimal(network, food_map, SPECIES_A, (x,y))
+			animal = AIAnimal(networkA, food_map, SPECIES_A, (x,y))
 			self.animals.append(animal)
 
 			self.world[x][y] = animal
@@ -95,8 +97,7 @@ class AIEnvironment(object):
 		food_map = self.food_mappings[1]
 		for i in range(numB):
 			(x,y) = self.generatePosition(grid)
-			network = NeuralNetwork()
-			animal = AIAnimal(network, food_map, SPECIES_B, (x,y))
+			animal = AIAnimal(networkB, food_map, SPECIES_B, (x,y))
 			self.animals.append(animal)
 
 			self.world[x][y] = animal
@@ -116,8 +117,8 @@ class AIEnvironment(object):
 
 			self.world[x][y] = food
 
-		self.display()
 		self.runSteps(steps)
+		return self.evaluateFitness()
 
 	def display(self):
 		"""
@@ -173,9 +174,6 @@ class AIEnvironment(object):
 			self.world[x][y] = None
 			self.world[x][y-1] = self.interact(animal, self.world[x][y-1])
 
-	def evolve(self, network):
-		raise NotImplementedError("Evole given network using evolver")
-
 	def runSteps(self, steps):
 		"""
 		Per step has each animal make an action
@@ -185,6 +183,7 @@ class AIEnvironment(object):
 		"""
 
 		for j in range(steps):
+			self.display()
 			r.shuffle(self.animals)
 			for i in range(len(self.animals)):
 				animal = self.animals[i]
@@ -192,9 +191,9 @@ class AIEnvironment(object):
 				if animal.getPosition():
 					self.animalAction(animal)
 
-			self.display()
-			time.sleep(2)
+			# time.sleep(2)
 
+		self.display()
 		print(self.evaluateFitness())
 
 	def evaluateFitness(self):
