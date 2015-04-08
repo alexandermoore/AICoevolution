@@ -224,7 +224,7 @@ class AIEnvironment(object):
 		fitnessA = scoreA / totalA
 		fitnessB = scoreB / totalB
 
-		return (fitnessA, fitnessB)
+		return (fitnessA, fitnessB, {})
 
 	def interact(self, aggressor, obj):
 		"""
