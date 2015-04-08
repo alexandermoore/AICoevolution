@@ -1,4 +1,9 @@
 from NeuralNetwork import *
+import random
+
+MUTATE_CHANCE = 0.05
+MUTATE_VARIANCE = 1.0
+NUM_CROSSOVER_PTS = 4
 
 class NeuralNetworkEvolver(object):
 	"""
@@ -9,13 +14,93 @@ class NeuralNetworkEvolver(object):
 		super(NeuralNetworkEvolver, self).__init__()
 		self.hall = []
 
-	def mutate(self, network):
-		# raise NotImplementedError("Return mutated network")
-		return network
+	def __gaussianMutate(self, value):
+		return random.gauss(value, MUTATE_VARIANCE)
 
-	def crossover(self, network1, network2):
+	def mutate(self, genome):
+
+		# raise NotImplementedError("Return mutated network")
+		genome = [self.__gaussianMutate(v) if random.random()<=MUTATE_CHANCE else v for v in genome]
+		return genome
+
+	def __genCrossoverPoints(self, length, num_points):
+		"""
+		Returns the locations of crossover points along a genome of length LENGTH.
+		A crossover point at index i means that indices (i+1) and above are on one side and i
+		and below are on the other side. Crossover points go from 0 to (length - 2) [-2 because the last
+		point needs to have something after it]
+
+		Args:
+			length: The length under consideration
+			num_points: The number of crossover points
+		"""
+		cross_pts = []
+		cross_pt = -1
+		for i in range(num_points):
+			# Crossover point must be after the previous point, but early enough so that there's enough room for all the points
+			cross_pt = random.randint(cross_pt + 1, length - (num_points - i + 1))
+			cross_pts.append(cross_pt)
+		return cross_pts
+
+	def crossover(self, genome1, genome2):
+		assert( len(genome1) == len(genome2))
+		parent_genomes = [genome1, genome2]
+
+		# Determine where crossover will occur
+		cross_pts = self.__genCrossoverPoints(len(genome1),NUM_CROSSOVER_PTS)
+
+		# Add each crossoer segment to childrens' genomes
+		child1 = []
+		child2 = []
+		parent_for_child1 = random.randint(0,1)
+		parent_for_child2 = (parent_for_child1 + 1) % 2
+		prev_pt = -1
+		for p in cross_pts:
+			child1.extend(parent_genomes[parent_for_child1][prev_pt+1:p+1])
+			child2.extend(parent_genomes[parent_for_child2][prev_pt+1:p+1])
+			# Alternate which child gets which parent's genome at each crossover point
+			parent_for_child1 = (parent_for_child1 + 1) % 2
+			parent_for_child2 = (parent_for_child1 + 1) % 2
+			prev_pt = p
+
+		# Add the final segment to genomes
+		child1.extend(parent_genomes[parent_for_child1][prev_pt+1:])
+		child2.extend(parent_genomes[parent_for_child2][prev_pt+1:])
+
 		# raise NotImplementedError("Return network from crossover")
-		return (network1, network2)
+		return (child1, child2)
+
+	def __tournamentSelection(self, networks):
+		"""
+		Returns one individual selected via tournament selection
+		"""
+		# TODO IF WE WANT
+		return networks[0][0]
+
+	def __getFitnessPropSelector(self, networks):
+		"""
+		Returns one individual selected via fitness proportionate selection
+		"""
+
+		# Preparatory stuff
+		total = sum([n[1] for n in networks])
+		networks = [(network, fit/total) for network, fit in networks]
+		cumulative_sum = 0
+		CDF = []
+		for network, fit in networks:
+			CDF.append(cumulative_sum + fit)
+			cumulative_sum += fit
+		# Account for floating point errors-- make last CDF element 1 explicitly (so it's not 0.9999...)
+		CDF[-1] = 1.0
+
+		# Perform the random selection
+		while(True):
+			select = random.random()
+			for i in range(len(networks)):
+				if select <= CDF[i]:
+					yield networks[i][0]
+					break
+
 
 	def evolve(self, networks):
 		"""
@@ -27,8 +112,36 @@ class NeuralNetworkEvolver(object):
 		Returns:
 			new list of networks that are next generation
 		"""
-		# raise NotImplementedError("Evolve networks")
-		return list(map((lambda x: x[0]) ,networks))
+		# Sort by fitness value
+		networks.sort(key=lambda x: x[1], reverse=True)
+		# Add the best to hall of fame
+		self.hall.append(networks[0])
+
+
+		nextgen = []
+		N = len(networks)
+		extra = math.ceil(N*1.0/2.0) - math.floor(N/2)
+		# Create 2 children from each parent pair. If an odd number of networks, then the last
+		# pair will only produce 1 child
+		parents = self.__getFitnessPropSelector(networks)
+		for _ in range(math.floor(N/2)):
+			parent1genome = next(parents).genome
+			parent2genome = next(parents).genome
+			child1genome, child2genome = self.crossover(parent1genome, parent2genome)
+			child1genome = self.mutate(child1genome)
+			child2genome = self.mutate(child2genome)
+			child1 = NeuralNetwork(child1genome)
+			child2 = NeuralNetwork(child2genome)
+			nextgen.extend([child1, child2])
+		for _ in range(extra):
+			parent1genome = next(parents).genome
+			parent2genome = next(parents).genome
+			child1genome, _ = self.crossover(parent1genome, parent2genome)
+			child1genome = self.mutate(child1genome)
+			child1 = NeuralNetwork(child1genome)
+			nextgen.append(child1)
+		return nextgen
+
 
 	def getHall(self):
 		"""
@@ -36,3 +149,13 @@ class NeuralNetworkEvolver(object):
 		"""
 
 		return self.hall
+
+if __name__ == "__main__":
+	evolver = NeuralNetworkEvolver()
+	networks = []
+	for i in range(6):
+		network = NeuralNetwork()
+		fitness = random.random()*50
+		networks.append((network, fitness))
+	print(len(evolver.evolve(networks)))
+
