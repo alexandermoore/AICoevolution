@@ -191,7 +191,7 @@ class AIEnvironment(object):
 				if animal.getPosition():
 					self.animalAction(animal)
 
-			# time.sleep(2)
+			time.sleep(2)
 
 		self.display()
 		print(self.evaluateFitness())
