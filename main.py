@@ -40,7 +40,7 @@ if __name__ == '__main__':
 
 			specificationA = (POP_A, networkA)
 			specificationB = (POP_B, networkB)
-			fitA, fitB = arena.generate(DIM, specificationA, specificationB, NUM_FOOD_1, NUM_FOOD_2, STEPS)
+			fitA, fitB, stats = arena.generate(DIM, specificationA, specificationB, NUM_FOOD_1, NUM_FOOD_2, STEPS)
 
 			(old_fit, old_count) = fit_countA[i]
 			fit_countA[i] = (old_fit + fitA, old_count + 1.0)
