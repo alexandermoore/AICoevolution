@@ -25,6 +25,10 @@ class AIAnimal(AIObject):
 		super(AIAnimal, self).__init__(name, position)
 		self.network = network
 		self.mapping = mapping
+		self.food_counts = {}
+		for food in self.mapping:
+			self.food_counts[food] = 0
+
 
 
 	def run(self, ins):
@@ -88,6 +92,7 @@ class AIAnimal(AIObject):
 		"""
 
 		self.points += self.mapping[food.getType()]
+		self.food_counts[food.getType()] += 1
 		food.die()
 
 	def __str__(self):
