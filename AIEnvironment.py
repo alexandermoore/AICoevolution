@@ -15,7 +15,7 @@ class AIEnvironment(object):
 		None
 	"""
 
-	def __init__(self, food_mappings):
+	def __init__(self, food_mappings, display = False):
 		"""
 		Initiailize game world
 
@@ -25,6 +25,7 @@ class AIEnvironment(object):
 
 		super(AIEnvironment, self).__init__()
 		self.food_mappings = food_mappings
+		self.will_display = display
 
 	def generatePosition(self, grid):
 		"""
@@ -82,7 +83,7 @@ class AIEnvironment(object):
 		r.seed(seed)
 
 		# Declare start of simulation
-		print("Generating New World: ")
+		# print("Generating New World: ")
 
 		# Place speciesA on world
 		food_map = self.food_mappings[0]
@@ -120,13 +121,15 @@ class AIEnvironment(object):
 		self.runSteps(steps)
 		return self.evaluateFitness()
 
-	def display(self):
+	def display(self, val):
 		"""
 		Displayes game world
 
 		Args:
 			None
 		"""
+		if not (val):
+			return
 
 		print("animals: ",list(map((lambda x : (x.getPosition(), x.getPoints())), self.animals)))
 		for i in range(len(self.world)):
@@ -134,6 +137,9 @@ class AIEnvironment(object):
 				print(self.world[j][i], end="\t")
 
 			print("\n")
+
+		print(self.evaluateFitness())
+		time.sleep(2)
 
 	def animalAction(self, animal):
 		"""
@@ -157,7 +163,11 @@ class AIEnvironment(object):
 			animal.setPosition((x-1,y))
 
 			self.world[x][y] = None
-			self.world[x-1][y] = self.interact(animal, self.world[x-1][y])
+
+			x_space = x - 1
+			if (x_space < 0):
+				x_space = len(self.world) - 1
+			self.world[x_space][y] = self.interact(animal, self.world[x_space][y])
 
 		elif action == 2:
 			(x,y) = animal.getPosition()
@@ -171,8 +181,12 @@ class AIEnvironment(object):
 			(x,y) = animal.getPosition()
 			animal.setPosition((x,y-1))
 
+			y_space = y - 1
+			if (y_space < 0):
+				y_space = len(self.world[0]) - 1
+
 			self.world[x][y] = None
-			self.world[x][y-1] = self.interact(animal, self.world[x][y-1])
+			self.world[x][y_space] = self.interact(animal, self.world[x][y_space])
 
 	def runSteps(self, steps):
 		"""
@@ -183,7 +197,7 @@ class AIEnvironment(object):
 		"""
 
 		for j in range(steps):
-			self.display()
+			self.display(self.will_display)
 			r.shuffle(self.animals)
 			for i in range(len(self.animals)):
 				animal = self.animals[i]
@@ -191,10 +205,8 @@ class AIEnvironment(object):
 				if animal.getPosition():
 					self.animalAction(animal)
 
-			time.sleep(2)
 
-		self.display()
-		print(self.evaluateFitness())
+		self.display(self.will_display)
 
 	def evaluateFitness(self):
 		"""
