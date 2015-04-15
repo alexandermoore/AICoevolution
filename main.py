@@ -22,25 +22,30 @@ speciesB_map["spB"] = -50
 speciesB_map["fd1"] = 5
 speciesB_map["fd2"] = 5
 
-POP_A = 20
-POP_B = 20
-NUM_FOOD_1 = 200
-NUM_FOOD_2 = 200
-STEPS = 1
-NUM_GENERATIONS = 1
+POP_A = 1500
+POP_B = 1500
+NUM_FOOD_1 = 1500
+NUM_FOOD_2 = 1500
+STEPS = 10000
+NUM_GENERATIONS = 1000
 DIM = 100
 
 def dd():
     return defaultdict(dict)
 
 if __name__ == '__main__':
-	p_range = range(-5, 5, 1)
+	p_range = range(-100, 101, 50)
 	params = itertools.product(p_range, p_range, p_range, p_range, p_range, p_range, p_range, p_range)
 
+	data_file_name = "data"
 	now = str(datetime.now())
 	file_no = 0
-	if not os.path.exists(now):
-	    os.makedirs(now)
+
+	if not os.path.exists(data_file_name):
+	    os.makedirs(data_file_name)
+
+	if not os.path.exists(data_file_name + "/" + now):
+	    os.makedirs(data_file_name + "/" + now)
 
 	for param in params:
 		print(param)
@@ -124,5 +129,5 @@ if __name__ == '__main__':
 			genomesB = evolverB.evolve(fitnessB)
 
 
-		pickle.dump({"A" : speciesA_map, "B" : speciesB_map, "stat": stats_record}, open(now + "/" + str(file_no), "wb"))
+		pickle.dump({"A" : speciesA_map, "B" : speciesB_map, "stat": stats_record}, open(data_file_name + "/" + now + "/" + str(file_no), "wb"))
 		file_no += 1

@@ -163,7 +163,11 @@ class AIEnvironment(object):
 			animal.setPosition((x-1,y))
 
 			self.world[x][y] = None
-			self.world[x-1][y] = self.interact(animal, self.world[x-1][y])
+
+			x_space = x - 1
+			if (x_space < 0):
+				x_space = len(self.world) - 1
+			self.world[x_space][y] = self.interact(animal, self.world[x_space][y])
 
 		elif action == 2:
 			(x,y) = animal.getPosition()
@@ -177,8 +181,12 @@ class AIEnvironment(object):
 			(x,y) = animal.getPosition()
 			animal.setPosition((x,y-1))
 
+			y_space = y - 1
+			if (y_space < 0):
+				y_space = len(self.world[0]) - 1
+
 			self.world[x][y] = None
-			self.world[x][y-1] = self.interact(animal, self.world[x][y-1])
+			self.world[x][y_space] = self.interact(animal, self.world[x][y_space])
 
 	def runSteps(self, steps):
 		"""
