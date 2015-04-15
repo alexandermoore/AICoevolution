@@ -206,6 +206,8 @@ class AIEnvironment(object):
 		Returns:
 			Tuple where first is the fitness of speciesA, second is speciesB.
 		"""
+		stats = {"food_counts": {SPECIES_A: {}, SPECIES_B: {}}}
+
 		scoreA = 0
 		totalA = 0
 		scoreB = 0
@@ -217,14 +219,22 @@ class AIEnvironment(object):
 			if (animal.getType() == SPECIES_A):
 				scoreA += animal.getPoints()
 				totalA += 1
+				for key, count in animal.food_counts.items():
+					if key not in stats["food_counts"][SPECIES_A]:
+						stats["food_counts"][SPECIES_A][key] = 0
+					stats["food_counts"][SPECIES_A][key] += count
 			else:
 				scoreB += animal.getPoints()
 				totalB += 1
+				for key, count in animal.food_counts.items():
+					if key not in stats["food_counts"][SPECIES_B]:
+						stats["food_counts"][SPECIES_B][key] = 0
+					stats["food_counts"][SPECIES_B][key] += count
 
 		fitnessA = scoreA / totalA
 		fitnessB = scoreB / totalB
 
-		return (fitnessA, fitnessB, {})
+		return (fitnessA, fitnessB, stats)
 
 	def interact(self, aggressor, obj):
 		"""
