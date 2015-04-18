@@ -23,7 +23,7 @@ speciesB_map["spB"] = -50
 speciesB_map["fd1"] = 5
 speciesB_map["fd2"] = 5
 
-DIM = 25
+DIM = 10
 # All this is just to maintain the same proportion of each species that you had when the world was 100x100.
 # You had 1500 of each in a 100x100 world, so here I'm just scaling it up/down based on the actual dimension.
 POP_A = int(DIM**2 * (1500.0/100**2)) # 1500
@@ -33,13 +33,10 @@ NUM_FOOD_2 = int(DIM**2 * (1500.0/100**2)) # 1500
 STEPS = DIM**2
 NUM_GENERATIONS = 1000
 
-def dd():
-    return defaultdict(dict)
-
 if __name__ == '__main__':
-	#p_range = range(-100, 101, 50)
-	#params = itertools.product(p_range, p_range, p_range, p_range, p_range, p_range, p_range, p_range)
-	params = [[0,100,20,0,100,0,0,20]]
+	p_range = range(-100, 101, 50)
+	params = itertools.product(p_range, p_range, p_range, p_range, p_range, p_range, p_range, p_range)
+	# params = [[0,100,20,0,100,0,0,20]]
 	data_file_name = "data"
 	now = str(datetime.now())
 	file_no = 0
@@ -71,12 +68,10 @@ if __name__ == '__main__':
 		genomesA = [NeuralNetwork(), NeuralNetwork(), NeuralNetwork()]
 		genomesB = [NeuralNetwork(), NeuralNetwork(), NeuralNetwork()]
 
-		stats_record = defaultdict(dd)
+		stats_record = defaultdict(dict)
 
 		for gen in range(NUM_GENERATIONS):
-			print("RUNNING GENERATION", gen)
-			arena = aie.AIEnvironment([speciesA_map, speciesB_map])
-			fit_countA = [(0.0,0.0)] * len(genomesA)
+			print("GENERATION: " + str(gen))
 			arena = aie.AIEnvironment([speciesA_map, speciesB_map])
 			fit_countA = [(0.0,0.0)] * len(genomesA)
 			fit_countB = [(0.0,0.0)] * len(genomesB)
@@ -90,35 +85,8 @@ if __name__ == '__main__':
 					specificationB = (POP_B, networkB)
 					fitA, fitB, stats = arena.generate(DIM, specificationA, specificationB, NUM_FOOD_1, NUM_FOOD_2, STEPS)
 
-					stats_record[gen][tuple(networkA.getGenome())][tuple(networkB.getGenome())] = (fitA, fitB, stats)
-					(old_fit, old_count) = fit_countA[i]
-					fit_countA[i] = (old_fit + fitA, old_count + 1.0)
-
-					(old_fit, old_count) = fit_countB[j]
-					fit_countB[j] = (old_fit + fitB, old_count + 1.0)
-
-			fitnessA = []
-			fitnessB = []
-
-			for i in range(len(genomesA)):
-				fitnessA.append((genomesA[i], fit_countA[i][0]/fit_countA[i][1]))
-
-			for i in range(len(genomesB)):
-				fitnessB.append((genomesB[i], fit_countB[i][0]/fit_countB[i][1]))
-
-			genomesA = evolverA.evolve(fitnessA)
-			genomesB = evolverB.evolve(fitnessB)
-			fit_countB = [(0.0,0.0)] * len(genomesB)
-
-			for i in range(len(genomesA)):
-				networkA = genomesA[i]
-				for j in range(len(genomesB)):
-					networkB = genomesB[j]
-
-					specificationA = (POP_A, networkA)
-					specificationB = (POP_B, networkB)
-					fitA, fitB, stats = arena.generate(DIM, specificationA, specificationB, NUM_FOOD_1, NUM_FOOD_2, STEPS)
-
+					if (gen == NUM_GENERATIONS - 1):
+						stats_record[tuple(networkA.getGenome())][tuple(networkB.getGenome())] = (fitA, fitB, stats)
 					(old_fit, old_count) = fit_countA[i]
 					fit_countA[i] = (old_fit + fitA, old_count + 1.0)
 
