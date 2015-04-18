@@ -8,6 +8,7 @@ from collections import defaultdict
 from datetime import datetime
 from NeuralNetwork import *
 from NeuralNetworkEvolver import *
+from util import *
 
 speciesA_map = {}
 speciesA_map["spA"] = -50
@@ -22,21 +23,23 @@ speciesB_map["spB"] = -50
 speciesB_map["fd1"] = 5
 speciesB_map["fd2"] = 5
 
-POP_A = 1500
-POP_B = 1500
-NUM_FOOD_1 = 1500
-NUM_FOOD_2 = 1500
-STEPS = 10000
+DIM = 25
+# All this is just to maintain the same proportion of each species that you had when the world was 100x100.
+# You had 1500 of each in a 100x100 world, so here I'm just scaling it up/down based on the actual dimension.
+POP_A = int(DIM**2 * (1500.0/100**2)) # 1500
+POP_B = int(DIM**2 * (1500.0/100**2)) # 1500
+NUM_FOOD_1 = int(DIM**2 * (1500.0/100**2)) # 1500
+NUM_FOOD_2 = int(DIM**2 * (1500.0/100**2)) # 1500
+STEPS = DIM**2
 NUM_GENERATIONS = 1000
-DIM = 100
 
 def dd():
     return defaultdict(dict)
 
 if __name__ == '__main__':
-	p_range = range(-100, 101, 50)
-	params = itertools.product(p_range, p_range, p_range, p_range, p_range, p_range, p_range, p_range)
-
+	#p_range = range(-100, 101, 50)
+	#params = itertools.product(p_range, p_range, p_range, p_range, p_range, p_range, p_range, p_range)
+	params = [[0,100,20,0,100,0,0,20]]
 	data_file_name = "data"
 	now = str(datetime.now())
 	file_no = 0
@@ -44,8 +47,13 @@ if __name__ == '__main__':
 	if not os.path.exists(data_file_name):
 	    os.makedirs(data_file_name)
 
-	if not os.path.exists(data_file_name + "/" + now):
-	    os.makedirs(data_file_name + "/" + now)
+	if not IS_WINDOWS:
+		if not os.path.exists(data_file_name + "/" + now):
+			os.makedirs(data_file_name + "/" + now)
+	else:
+		now_win = now.replace(":","-")
+		if not os.path.exists(data_file_name + "/" + now_win):
+			os.makedirs(data_file_name + "/" + now_win)
 
 	for param in params:
 		print(param)
@@ -66,6 +74,7 @@ if __name__ == '__main__':
 		stats_record = defaultdict(dd)
 
 		for gen in range(NUM_GENERATIONS):
+			print("RUNNING GENERATION", gen)
 			arena = aie.AIEnvironment([speciesA_map, speciesB_map])
 			fit_countA = [(0.0,0.0)] * len(genomesA)
 			arena = aie.AIEnvironment([speciesA_map, speciesB_map])

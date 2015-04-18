@@ -151,6 +151,7 @@ class AIEnvironment(object):
 
 		action = animal.run(self.world)
 
+		# Move EAST
 		if action == 0:
 			(x,y) = animal.getPosition()
 			animal.setPosition(((x+1) % len(self.world),y))
@@ -158,9 +159,10 @@ class AIEnvironment(object):
 			self.world[x][y] = None
 			self.world[(x+1) % len(self.world)][y] = self.interact(animal, self.world[(x+1) % len(self.world)][y])
 
+		# Move WEST
 		elif action == 1:
 			(x,y) = animal.getPosition()
-			animal.setPosition((x-1,y))
+			animal.setPosition(( (x-1) % len(self.world) ,y))
 
 			self.world[x][y] = None
 
@@ -169,6 +171,7 @@ class AIEnvironment(object):
 				x_space = len(self.world) - 1
 			self.world[x_space][y] = self.interact(animal, self.world[x_space][y])
 
+		# Move NORTH
 		elif action == 2:
 			(x,y) = animal.getPosition()
 			animal.setPosition((x,(y+1) % len(self.world)))
@@ -176,10 +179,10 @@ class AIEnvironment(object):
 			self.world[x][y] = None
 			self.world[x][(y+1) % len(self.world)] = self.interact(animal, self.world[x][(y+1) % len(self.world)])
 
-
+		# Move SOUTH
 		elif action == 3:
 			(x,y) = animal.getPosition()
-			animal.setPosition((x,y-1))
+			animal.setPosition((x,(y-1) % len(self.world[0])))
 
 			y_space = y - 1
 			if (y_space < 0):

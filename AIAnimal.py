@@ -97,7 +97,12 @@ class AIAnimal(AIObject):
 		food.die()
 
 	def __str__(self):
-		color = '\033[94m'
-		if (self.getType() == "spA"):
-			color = '\033[91m'
-		return color + self.name + '\033[0m'
+		if USE_COLORS:
+			color_a = '\033[94m'
+			color_b = '\033[0m'
+			if (self.getType() == "spA"):
+				color_a = '\033[91m'
+		else:
+			color_a = ''
+			color_b = ''
+		return color_a + self.name + color_b
