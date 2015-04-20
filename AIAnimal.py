@@ -85,23 +85,23 @@ class AIAnimal(AIObject):
 			if ty > y:
 				i = 0
 				off = self.__get_input_off(obj)
-				input_variables[i+off] += 1
+				input_variables[i+off] += 1.0/(ty - y)
 
 			# DOWN
 			if ty < y:
 				i = 1
 				off = self.__get_input_off(obj)
-				input_variables[i+off] += 1
+				input_variables[i+off] += 1.0/(y - ty)
 			# LEFT
 			if tx < x:
 				i = 2
 				off = self.__get_input_off(obj)
-				input_variables[i+off] += 1
+				input_variables[i+off] += 1.0/(x - tx)
 			# RIGHT
 			if tx > x:
 				i = 3
 				off = self.__get_input_off(obj)
-				input_variables[i+off] += 1
+				input_variables[i+off] += 1.0/(tx - x)
 
 			#print([ ins[(x + i) % length][(y + j) % length] for i in range(-sight_range, sight_range+1) for j in range(-sight_range, sight_range+1) if (i,j) != (x,y)])
 			#print([ins[tx % length][ty % length] for (tx, ty) in env])

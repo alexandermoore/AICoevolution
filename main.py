@@ -31,12 +31,14 @@ POP_B = 5
 NUM_FOOD_1 = 10
 NUM_FOOD_2 = 10
 STEPS = DIM**2
-NUM_GENERATIONS = 3000
+NUM_GENERATIONS = 500
 
 if __name__ == '__main__':
 	#p_range = range(-100, 101, 50)
 	#params = itertools.product(p_range, p_range, p_range, p_range, p_range, p_range, p_range, p_range)
-	params = [[-10000,100,2,0,  0,-10000,0,200]]
+	#params = [[-10000,100,2,0,  0,-10000,0,200]]
+	params = [[-10000, -10000, 500, 0,
+			   -10000, -10000, 0, 500]]
 	data_file_name = "data"
 	now = str(datetime.now())
 	file_no = 0
