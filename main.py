@@ -34,9 +34,9 @@ STEPS = DIM**2
 NUM_GENERATIONS = 1000
 
 if __name__ == '__main__':
-	p_range = range(-100, 101, 50)
-	params = itertools.product(p_range, p_range, p_range, p_range, p_range, p_range, p_range, p_range)
-	# params = [[0,100,20,0,100,0,0,20]]
+	# p_range = range(-100, 101, 50)
+	# params = itertools.product(p_range, p_range, p_range, p_range, p_range, p_range, p_range, p_range)
+	params = [[-100,100,0,0,0,-100,100,20], [-100,0,100,20,100,-100,0,0], [-100,-100,0,50,-100,-100,50,0], [-100,-100,0,50,-100,-100,50,0], [100,100,0,50,-100,-100,50,0]]
 	data_file_name = "data"
 	now = str(datetime.now())
 	file_no = 0
