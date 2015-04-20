@@ -33,9 +33,6 @@ NUM_FOOD_2 = 10
 STEPS = DIM**2
 NUM_GENERATIONS = 2000
 
-def dd():
-    return defaultdict(dict)
-
 if __name__ == '__main__':
 	#p_range = range(-100, 101, 50)
 	#params = itertools.product(p_range, p_range, p_range, p_range, p_range, p_range, p_range, p_range)
@@ -71,12 +68,10 @@ if __name__ == '__main__':
 		genomesA = [NeuralNetwork(), NeuralNetwork(), NeuralNetwork()]
 		genomesB = [NeuralNetwork(), NeuralNetwork(), NeuralNetwork()]
 
-		stats_record = defaultdict(dd)
+		stats_record = defaultdict(dict)
 
 		for gen in range(NUM_GENERATIONS):
-			print("RUNNING GENERATION", gen)
-			arena = aie.AIEnvironment([speciesA_map, speciesB_map])
-			fit_countA = [(0.0,0.0)] * len(genomesA)
+			print("GENERATION: " + str(gen))
 			arena = aie.AIEnvironment([speciesA_map, speciesB_map])
 			fit_countA = [(0.0,0.0)] * len(genomesA)
 			fit_countB = [(0.0,0.0)] * len(genomesB)
@@ -90,7 +85,8 @@ if __name__ == '__main__':
 					specificationB = (POP_B, networkB)
 					fitA, fitB, stats = arena.generate(DIM, specificationA, specificationB, NUM_FOOD_1, NUM_FOOD_2, STEPS)
 
-					stats_record[gen][tuple(networkA.getGenome())][tuple(networkB.getGenome())] = (fitA, fitB, stats)
+					if (gen == NUM_GENERATIONS - 1):
+						stats_record[tuple(networkA.getGenome())][tuple(networkB.getGenome())] = (fitA, fitB, stats)
 					(old_fit, old_count) = fit_countA[i]
 					fit_countA[i] = (old_fit + fitA, old_count + 1.0)
 
@@ -110,5 +106,4 @@ if __name__ == '__main__':
 			genomesB = evolverB.evolve(fitnessB)
 
 		pickle.dump({"A" : speciesA_map, "B" : speciesB_map, "stat": stats_record}, open(data_file_name + "/" + now + "/" + str(file_no), "wb"))
-		print(stats_record[NUM_GENERATIONS-1])
 		file_no += 1
