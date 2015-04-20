@@ -1,9 +1,9 @@
 from NeuralNetwork import *
 import random
 
-MUTATE_CHANCE = 0.05
+MUTATE_CHANCE = 0.30
 MUTATE_VARIANCE = 1.0
-NUM_CROSSOVER_PTS = 4
+NUM_CROSSOVER_PTS = 128
 
 class NeuralNetworkEvolver(object):
 	"""
@@ -101,6 +101,10 @@ class NeuralNetworkEvolver(object):
 					yield networks[i][0]
 					break
 
+	def __normalize_genome(self, genome):
+		max_weight = max([abs(g) for g in genome])
+		genome = [g*1.0/max_weight for g in genome]
+		return genome
 
 	def evolve(self, networks):
 		"""
@@ -130,6 +134,8 @@ class NeuralNetworkEvolver(object):
 			child1genome, child2genome = self.crossover(parent1genome, parent2genome)
 			child1genome = self.mutate(child1genome)
 			child2genome = self.mutate(child2genome)
+			child1genome = self.__normalize_genome(child1genome)
+			child2genome = self.__normalize_genome(child2genome)
 			child1 = NeuralNetwork(child1genome)
 			child2 = NeuralNetwork(child2genome)
 			nextgen.extend([child1, child2])
@@ -138,6 +144,7 @@ class NeuralNetworkEvolver(object):
 			parent2genome = next(parents).genome
 			child1genome, _ = self.crossover(parent1genome, parent2genome)
 			child1genome = self.mutate(child1genome)
+			child1genome = self.__normalize_genome(child1genome)
 			child1 = NeuralNetwork(child1genome)
 			nextgen.append(child1)
 		return nextgen

@@ -30,6 +30,21 @@ class AIAnimal(AIObject):
 			self.food_counts[food] = 0
 
 
+	def __get_input_off(self, obj):
+		"""
+		Returns correct offset in neural network input array
+		"""
+		if not obj:
+			return None
+		if (obj.getType() == SPECIES_A):
+			return 0
+		elif (obj.getType() == SPECIES_B):
+			return 1
+		elif (obj.getType() == FOOD_1):
+			return 2
+		elif (obj.getType() == FOOD_2):
+			return 3
+		raise Exception("INVALID OBJ TYPE {0}".format(obj))
 
 	def run(self, ins):
 		"""
@@ -53,12 +68,45 @@ class AIAnimal(AIObject):
 		(x,y) = self.getPosition()
 		length = len(ins)
 
-		env = [(x-1,y-1), (x, y-1), (x+1, y-1), (x-1, y), (x+1, y), (x-1, y+1), (x, y+1), (x+1, y+1)]
+		# See 2 squares ahead
+		sight_range = 2
+		env = [((x+i), (y+j)) for i in range(-sight_range, sight_range + 1) for j in range(-sight_range, sight_range + 1) if (i,j) != (x,y)]
+		# env = list(map((lambda x: (x[0] % length, x[1] % length)), env))
 
-		env = list(map((lambda x: (x[0] % length, x[1] % length)), env))
 
-		input_variables = [0] * 32
+		input_variables = [0] * 16
 
+		for (tx, ty) in env:
+			obj = ins[tx % length][ty % length]
+
+			if obj is None:
+				continue
+			# UP
+			if ty > y:
+				i = 0
+				off = self.__get_input_off(obj)
+				input_variables[i+off] += 1
+
+			# DOWN
+			if ty < y:
+				i = 1
+				off = self.__get_input_off(obj)
+				input_variables[i+off] += 1
+			# LEFT
+			if tx < x:
+				i = 2
+				off = self.__get_input_off(obj)
+				input_variables[i+off] += 1
+			# RIGHT
+			if tx > x:
+				i = 3
+				off = self.__get_input_off(obj)
+				input_variables[i+off] += 1
+
+			#print([ ins[(x + i) % length][(y + j) % length] for i in range(-sight_range, sight_range+1) for j in range(-sight_range, sight_range+1) if (i,j) != (x,y)])
+			#print([ins[tx % length][ty % length] for (tx, ty) in env])
+
+		"""
 		for i in range(len(env)):
 			(x,y) = env[i]
 			obj = ins[x][y]
@@ -73,7 +121,7 @@ class AIAnimal(AIObject):
 				input_variables[i*4 + 2] += 1
 			elif (obj.getType() == FOOD_2):
 				input_variables[i*4 + 3] += 1
-
+		"""
 		options = self.network.evaluate(input_variables)
 		move = options.index(max(options))
 

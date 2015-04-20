@@ -31,7 +31,7 @@ POP_B = 5
 NUM_FOOD_1 = 10
 NUM_FOOD_2 = 10
 STEPS = DIM**2
-NUM_GENERATIONS = 2000
+NUM_GENERATIONS = 3000
 
 if __name__ == '__main__':
 	#p_range = range(-100, 101, 50)
@@ -106,4 +106,5 @@ if __name__ == '__main__':
 			genomesB = evolverB.evolve(fitnessB)
 
 		pickle.dump({"A" : speciesA_map, "B" : speciesB_map, "stat": stats_record}, open(data_file_name + "/" + now + "/" + str(file_no), "wb"))
+		print(stats_record)
 		file_no += 1

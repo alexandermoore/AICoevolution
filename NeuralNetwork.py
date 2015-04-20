@@ -1,5 +1,5 @@
-INPUT_NODES = 32
-NODES_PER_HIDDEN_LAYER = [5]
+INPUT_NODES = 16
+NODES_PER_HIDDEN_LAYER = [16]
 OUTPUT_NODES = 5
 import random as r
 from FFNeuralNetwork import *
