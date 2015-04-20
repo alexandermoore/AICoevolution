@@ -34,11 +34,17 @@ STEPS = DIM**2
 NUM_GENERATIONS = 500
 
 if __name__ == '__main__':
+
 	#p_range = range(-100, 101, 50)
 	#params = itertools.product(p_range, p_range, p_range, p_range, p_range, p_range, p_range, p_range)
 	#params = [[-10000,100,2,0,  0,-10000,0,200]]
-	params = [[-10000, -10000, 500, 0,
-			   -10000, -10000, 0, 500]]
+	# params = [[-10000, -10000, 500, 0,
+	# 		   -10000, -10000, 0, 500]]
+
+	# p_range = range(-100, 101, 50)
+	# params = itertools.product(p_range, p_range, p_range, p_range, p_range, p_range, p_range, p_range)
+	params = [[-100,100,0,0,0,-100,100,20], [-100,0,100,20,100,-100,0,0], [-100,-100,0,50,-100,-100,50,0], [-100,-100,0,50,-100,-100,50,0], [100,100,0,50,-100,-100,50,0]]
+
 	data_file_name = "data"
 	now = str(datetime.now())
 	file_no = 0
@@ -46,13 +52,9 @@ if __name__ == '__main__':
 	if not os.path.exists(data_file_name):
 	    os.makedirs(data_file_name)
 
-	if not IS_WINDOWS:
-		if not os.path.exists(data_file_name + "/" + now):
-			os.makedirs(data_file_name + "/" + now)
-	else:
-		now = now.replace(":","-")
-		if not os.path.exists(data_file_name + "/" + now):
-			os.makedirs(data_file_name + "/" + now)
+	now = now.replace(":","-")
+	if not os.path.exists(data_file_name + "/" + now):
+		os.makedirs(data_file_name + "/" + now)
 
 	for param in params:
 		print(param)
