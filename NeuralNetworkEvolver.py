@@ -2,8 +2,9 @@ from NeuralNetwork import *
 import random
 
 MUTATE_CHANCE = 0.30
-MUTATE_VARIANCE = 1.0
-NUM_CROSSOVER_PTS = 128
+MUTATE_VARIANCE = 3.0
+NUM_CROSSOVER_PTS = 16
+HALL_SIZE = 5
 
 class NeuralNetworkEvolver(object):
 	"""
@@ -83,10 +84,14 @@ class NeuralNetworkEvolver(object):
 		"""
 
 		# Preparatory stuff
-		total = sum([n[1] for n in networks])
-		networks = [(network, fit/total) for network, fit in networks]
+		fitness_vals = [n[1] for n in networks]
+		min_fitness = abs(min(fitness_vals))
+		total = sum([f + min_fitness + 1.0 for f in fitness_vals])
+		networks = [(networks[i][0], (min_fitness + networks[i][1] + 1.0)/total) for i in range(len(networks))]
+
 		cumulative_sum = 0
 		CDF = []
+
 		for network, fit in networks:
 			CDF.append(cumulative_sum + fit)
 			cumulative_sum += fit
@@ -118,8 +123,11 @@ class NeuralNetworkEvolver(object):
 		"""
 		# Sort by fitness value
 		networks.sort(key=lambda x: x[1], reverse=True)
-		# Add the best to hall of fame
-		self.hall.append(networks[0])
+		# Add the best to hall of fame, but remove random member if hall too large
+		if len(self.hall) > HALL_SIZE:
+			self.hall.pop()
+		self.hall.append(networks[0][0])
+		random.shuffle(self.hall)
 
 
 		nextgen = []
@@ -147,6 +155,8 @@ class NeuralNetworkEvolver(object):
 			child1genome = self.__normalize_genome(child1genome)
 			child1 = NeuralNetwork(child1genome)
 			nextgen.append(child1)
+		# Replace the last child with a random hall of famer
+		nextgen = nextgen[:-1] + [random.choice(self.hall)]
 		return nextgen
 
 

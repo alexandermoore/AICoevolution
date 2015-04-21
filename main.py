@@ -30,20 +30,21 @@ POP_A = 5
 POP_B = 5
 NUM_FOOD_1 = 10
 NUM_FOOD_2 = 10
-STEPS = DIM**2
+STEPS = int(DIM**2 / 5)
 NUM_GENERATIONS = 500
+NUM_GENOMES = 40
 
 if __name__ == '__main__':
 
 	#p_range = range(-100, 101, 50)
 	#params = itertools.product(p_range, p_range, p_range, p_range, p_range, p_range, p_range, p_range)
 	#params = [[-10000,100,2,0,  0,-10000,0,200]]
-	# params = [[-10000, -10000, 500, 0,
-	# 		   -10000, -10000, 0, 500]]
+	params = [[-10000, -10000, 500, 0,
+	 		   -10000, -10000, 0, 500]]
 
 	# p_range = range(-100, 101, 50)
 	# params = itertools.product(p_range, p_range, p_range, p_range, p_range, p_range, p_range, p_range)
-	params = [[-100,100,0,0,0,-100,100,20], [-100,0,100,20,100,-100,0,0], [-100,-100,0,50,-100,-100,50,0], [-100,-100,0,50,-100,-100,50,0], [100,100,0,50,-100,-100,50,0]]
+	# params = [[-100,100,0,0,0,-100,100,20], [-100,0,100,20,100,-100,0,0], [-100,-100,0,50,-100,-100,50,0], [-100,-100,0,50,-100,-100,50,0], [100,100,0,50,-100,-100,50,0]]
 
 	data_file_name = "data"
 	now = str(datetime.now())
@@ -69,16 +70,18 @@ if __name__ == '__main__':
 
 		evolverA = NeuralNetworkEvolver()
 		evolverB = NeuralNetworkEvolver()
-		genomesA = [NeuralNetwork(), NeuralNetwork(), NeuralNetwork()]
-		genomesB = [NeuralNetwork(), NeuralNetwork(), NeuralNetwork()]
+		genomesA = [NeuralNetwork() for i in range(NUM_GENOMES)]
+		genomesB = [NeuralNetwork() for i in range(1)]
 
 		stats_record = defaultdict(dict)
 
 		for gen in range(NUM_GENERATIONS):
 			print("GENERATION: " + str(gen))
 			arena = aie.AIEnvironment([speciesA_map, speciesB_map])
-			fit_countA = [(0.0,0.0)] * len(genomesA)
-			fit_countB = [(0.0,0.0)] * len(genomesB)
+			# fit_countA = [(0.0,0.0)] * len(genomesA)
+			# fit_countB = [(0.0,0.0)] * len(genomesB)
+			fit_countA = [0] * len(genomesA)
+			fit_countB = [0] * len(genomesB)
 
 			for i in range(len(genomesA)):
 				networkA = genomesA[i]
@@ -91,20 +94,26 @@ if __name__ == '__main__':
 
 					if (gen == NUM_GENERATIONS - 1):
 						stats_record[tuple(networkA.getGenome())][tuple(networkB.getGenome())] = (fitA, fitB, stats)
-					(old_fit, old_count) = fit_countA[i]
-					fit_countA[i] = (old_fit + fitA, old_count + 1.0)
-
-					(old_fit, old_count) = fit_countB[j]
-					fit_countB[j] = (old_fit + fitB, old_count + 1.0)
+					fit_countA[i] = max(fit_countA[i], fitA)
+					fit_countB[j] = max(fit_countB[j], fitB)
+					# (old_fit, old_count) = fit_countA[i]
+					# fit_countA[i] = (old_fit + fitA, old_count + 1.0)
+					#
+					# (old_fit, old_count) = fit_countB[j]
+					# fit_countB[j] = (old_fit + fitB, old_count + 1.0)
 
 			fitnessA = []
 			fitnessB = []
-
 			for i in range(len(genomesA)):
-				fitnessA.append((genomesA[i], fit_countA[i][0]/fit_countA[i][1]))
-
+				fitnessA.append((genomesA[i], fit_countA[i]))
 			for i in range(len(genomesB)):
-				fitnessB.append((genomesB[i], fit_countB[i][0]/fit_countB[i][1]))
+				fitnessB.append((genomesB[i], fit_countB[i]))
+
+			# for i in range(len(genomesA)):
+			# 	fitnessA.append((genomesA[i], fit_countA[i][0]/fit_countA[i][1]))
+			#
+			# for i in range(len(genomesB)):
+			# 	fitnessB.append((genomesB[i], fit_countB[i][0]/fit_countB[i][1]))
 
 			genomesA = evolverA.evolve(fitnessA)
 			genomesB = evolverB.evolve(fitnessB)
