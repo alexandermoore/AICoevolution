@@ -71,7 +71,7 @@ if __name__ == '__main__':
 		evolverA = NeuralNetworkEvolver()
 		evolverB = NeuralNetworkEvolver()
 		genomesA = [NeuralNetwork() for i in range(NUM_GENOMES)]
-		genomesB = [NeuralNetwork() for i in range(1)]
+		genomesB = [NeuralNetwork() for i in range(NUM_GENOMES)]
 
 		stats_record = defaultdict(dict)
 
