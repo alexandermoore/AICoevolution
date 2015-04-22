@@ -43,7 +43,6 @@ def graph(food_counts):
 
 	# add some text for labels, title and axes ticks
 	ax.set_ylabel('Scores')
-	ax.set_title('Scores by group and gender')
 	ax.set_xticks(ind+width)
 	ax.set_xticklabels( ('G1', 'G2', 'G3') )
 
