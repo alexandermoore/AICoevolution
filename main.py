@@ -85,9 +85,9 @@ if __name__ == '__main__':
 				for j in range(len(genomesB)):
 					networkB = genomesB[j]
 
-					specificationA = (POP_A, networkA)
-					specificationB = (POP_B, networkB)
-					fitA, fitB, stats = arena.generate(DIM, specificationA, specificationB, NUM_FOOD_1, NUM_FOOD_2, STEPS)
+					specA = (POP_A, networkA)
+					specB = (POP_B, networkB)
+					fitA, fitB, stats = arena.generate(DIM, specA, specB, NUM_FOOD_1, NUM_FOOD_2, STEPS)
 
 					if (gen == NUM_GENERATIONS - 1):
 						stats_record[tuple(networkA.getGenome())][tuple(networkB.getGenome())] = (fitA, fitB, stats)
