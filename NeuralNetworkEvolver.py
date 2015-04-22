@@ -1,9 +1,10 @@
 from NeuralNetwork import *
 import random
 
-MUTATE_CHANCE = 0.30
-MUTATE_VARIANCE = 1.0
-NUM_CROSSOVER_PTS = 128
+MUTATE_CHANCE = 0.10 # Probability of mutating a given weight
+MUTATE_VARIANCE = 0.50 # Mutations are performed according to a 0-mean Gaussian with this variance
+NUM_CROSSOVER_PTS = 8 # Number of crossover points to use during crossover
+HALL_SIZE = 5 # Number of members of Hall of Fame. Each time, 1 random member from hall is inserted into population.
 
 class NeuralNetworkEvolver(object):
 	"""
@@ -83,10 +84,14 @@ class NeuralNetworkEvolver(object):
 		"""
 
 		# Preparatory stuff
-		total = sum([n[1] for n in networks])
-		networks = [(network, fit/total) for network, fit in networks]
+		fitness_vals = [n[1] for n in networks]
+		min_fitness = abs(min(fitness_vals))
+		total = sum([f + min_fitness + 1.0 for f in fitness_vals])
+		networks = [(networks[i][0], (min_fitness + networks[i][1] + 1.0)/total) for i in range(len(networks))]
+
 		cumulative_sum = 0
 		CDF = []
+
 		for network, fit in networks:
 			CDF.append(cumulative_sum + fit)
 			cumulative_sum += fit
@@ -94,6 +99,7 @@ class NeuralNetworkEvolver(object):
 		CDF[-1] = 1.0
 
 		# Perform the random selection
+		print(CDF)
 		while(True):
 			select = random.random()
 			for i in range(len(networks)):
@@ -102,8 +108,8 @@ class NeuralNetworkEvolver(object):
 					break
 
 	def __normalize_genome(self, genome):
-		max_weight = max([abs(g) for g in genome])
-		genome = [g*1.0/max_weight for g in genome]
+		# max_weight = max([abs(g) for g in genome])
+		# genome = [g*1.0/max_weight for g in genome]
 		return genome
 
 	def evolve(self, networks):
@@ -118,8 +124,11 @@ class NeuralNetworkEvolver(object):
 		"""
 		# Sort by fitness value
 		networks.sort(key=lambda x: x[1], reverse=True)
-		# Add the best to hall of fame
-		self.hall.append(networks[0])
+		# Add the best to hall of fame, but remove random member if hall too large
+		if len(self.hall) > HALL_SIZE:
+			self.hall.pop()
+		self.hall.append(networks[0][0])
+		random.shuffle(self.hall)
 
 
 		nextgen = []
@@ -147,6 +156,8 @@ class NeuralNetworkEvolver(object):
 			child1genome = self.__normalize_genome(child1genome)
 			child1 = NeuralNetwork(child1genome)
 			nextgen.append(child1)
+		# Replace the last child with a random hall of famer
+		nextgen = nextgen[:-1] + [random.choice(self.hall)]
 		return nextgen
 
 

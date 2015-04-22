@@ -14,9 +14,9 @@ class FFNeuralNetwork(object):
 		outputactivate: The activation function to use for output layer nodes. Sigmoid is default.
 		"""
 		if not activate_fn:
-			self.activate_fn = self.__sigmoid
+			self.activate_fn = self.__identity
 		if not outputactivate_fn:
-			self.outputactivate_fn = self.__sigmoid
+			self.outputactivate_fn = self.__identity
 
 		n_hidden_layers = len(n_hidden)
 		self.input_layer = []
@@ -79,6 +79,9 @@ class FFNeuralNetwork(object):
 		Evaluates the sigmoid activation function for the neural network
 		"""
 		return 1.0/(1.0 + math.exp(-x))
+
+	def __identity(self, x):
+		return x
 
 
 	def __activate(self, x):
