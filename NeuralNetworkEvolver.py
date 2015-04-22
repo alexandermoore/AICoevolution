@@ -99,7 +99,6 @@ class NeuralNetworkEvolver(object):
 		CDF[-1] = 1.0
 
 		# Perform the random selection
-		print(CDF)
 		while(True):
 			select = random.random()
 			for i in range(len(networks)):
