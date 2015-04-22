@@ -39,7 +39,7 @@ if __name__ == '__main__':
 	#p_range = range(-100, 101, 50)
 	#params = itertools.product(p_range, p_range, p_range, p_range, p_range, p_range, p_range, p_range)
 	#params = [[-10000,100,2,0,  0,-10000,0,200]]
-	params = [[-100,100,0,0,0,-100,100,50],[-100,0,100,50,100,-100,100,50],[-100,0,100,50,50,-100,100,100],[-100,-100,0,50,-100,-100,50,0],[-100,-100,-50,50,-100,-100,50,-50],[-100,0,50,0,0,-100,50,0],[-100,50,50,0,50,-100,50,0],[-100,50,100,0,50,-100,100,0],[-100,-50,100,0,-50,-100,100,0],[-100,-100,50,0,-100,-100,50,0],[100,100,0,0,-100,-100,50,0],[100,-100,0,0,100,-100,0,0]]
+	params = [[-100,0,100,50,50,-100,100,100],[-100,-100,0,50,-100,-100,50,0],[-100,-100,-50,50,-100,-100,50,-50],[-100,0,50,0,0,-100,50,0],[-100,50,50,0,50,-100,50,0],[-100,50,100,0,50,-100,100,0],[-100,-50,100,0,-50,-100,100,0],[-100,-100,50,0,-100,-100,50,0],[100,100,0,0,-100,-100,50,0],[100,-100,0,0,100,-100,0,0]]
 
 	# p_range = range(-100, 101, 50)
 	# params = itertools.product(p_range, p_range, p_range, p_range, p_range, p_range, p_range, p_range)
@@ -76,7 +76,7 @@ if __name__ == '__main__':
 
 		for gen in range(NUM_GENERATIONS):
 			print("GENERATION: " + str(gen))
-			arena = aie.AIEnvironment([speciesA_map, speciesB_map], display=(gen == NUM_GENERATIONS-1))
+			arena = aie.AIEnvironment([speciesA_map, speciesB_map])
 			# fit_countA = [(0.0,0.0)] * len(genomesA)
 			# fit_countB = [(0.0,0.0)] * len(genomesB)
 			fit_countA = [0] * len(genomesA)
