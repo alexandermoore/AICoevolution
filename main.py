@@ -30,8 +30,8 @@ POP_A = 5
 POP_B = 5
 NUM_FOOD_1 = 10
 NUM_FOOD_2 = 10
-STEPS = int(DIM**2 / 5)
-NUM_GENERATIONS = 500
+STEPS = int(DIM**2 / 4)
+NUM_GENERATIONS = 10000
 NUM_GENOMES = 40
 
 if __name__ == '__main__':
@@ -77,7 +77,7 @@ if __name__ == '__main__':
 
 		for gen in range(NUM_GENERATIONS):
 			print("GENERATION: " + str(gen))
-			arena = aie.AIEnvironment([speciesA_map, speciesB_map])
+			arena = aie.AIEnvironment([speciesA_map, speciesB_map], display=(gen == NUM_GENERATIONS-1))
 			# fit_countA = [(0.0,0.0)] * len(genomesA)
 			# fit_countB = [(0.0,0.0)] * len(genomesB)
 			fit_countA = [0] * len(genomesA)

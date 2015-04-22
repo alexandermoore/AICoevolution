@@ -1,10 +1,10 @@
 from NeuralNetwork import *
 import random
 
-MUTATE_CHANCE = 0.30
-MUTATE_VARIANCE = 3.0
-NUM_CROSSOVER_PTS = 16
-HALL_SIZE = 5
+MUTATE_CHANCE = 0.10 # Probability of mutating a given weight
+MUTATE_VARIANCE = 0.50 # Mutations are performed according to a 0-mean Gaussian with this variance
+NUM_CROSSOVER_PTS = 8 # Number of crossover points to use during crossover
+HALL_SIZE = 5 # Number of members of Hall of Fame. Each time, 1 random member from hall is inserted into population.
 
 class NeuralNetworkEvolver(object):
 	"""
@@ -99,6 +99,7 @@ class NeuralNetworkEvolver(object):
 		CDF[-1] = 1.0
 
 		# Perform the random selection
+		print(CDF)
 		while(True):
 			select = random.random()
 			for i in range(len(networks)):
@@ -107,8 +108,8 @@ class NeuralNetworkEvolver(object):
 					break
 
 	def __normalize_genome(self, genome):
-		max_weight = max([abs(g) for g in genome])
-		genome = [g*1.0/max_weight for g in genome]
+		# max_weight = max([abs(g) for g in genome])
+		# genome = [g*1.0/max_weight for g in genome]
 		return genome
 
 	def evolve(self, networks):
