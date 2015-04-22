@@ -31,7 +31,7 @@ POP_B = 5
 NUM_FOOD_1 = 10
 NUM_FOOD_2 = 10
 STEPS = int(DIM**2 / 4)
-NUM_GENERATIONS = 10000
+NUM_GENERATIONS = 1000
 NUM_GENOMES = 40
 
 if __name__ == '__main__':
@@ -39,8 +39,7 @@ if __name__ == '__main__':
 	#p_range = range(-100, 101, 50)
 	#params = itertools.product(p_range, p_range, p_range, p_range, p_range, p_range, p_range, p_range)
 	#params = [[-10000,100,2,0,  0,-10000,0,200]]
-	params = [[-10000, -10000, 500, 0,
-	 		   -10000, -10000, 0, 500]]
+	params = [[-100,100,0,0,0,-100,100,50],[-100,0,100,50,100,-100,100,50],[-100,0,100,50,50,-100,100,100],[-100,-100,0,50,-100,-100,50,0],[-100,-100,-50,50,-100,-100,50,-50],[-100,0,50,0,0,-100,50,0],[-100,50,50,0,50,-100,50,0],[-100,50,100,0,50,-100,100,0],[-100,-50,100,0,-50,-100,100,0],[-100,-100,50,0,-100,-100,50,0],[100,100,0,0,-100,-100,50,0],[100,-100,0,0,100,-100,0,0]]
 
 	# p_range = range(-100, 101, 50)
 	# params = itertools.product(p_range, p_range, p_range, p_range, p_range, p_range, p_range, p_range)

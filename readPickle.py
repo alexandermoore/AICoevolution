@@ -2,7 +2,7 @@
 
 import pickle
 import os
-# from NeuralNetwork import *
+from NeuralNetwork import *
 import AIEnvironment as aie
 import time
 import numpy as np
@@ -47,7 +47,7 @@ def graph(food_counts):
 	ax.set_xticks(ind+width)
 	ax.set_xticklabels( ('G1', 'G2', 'G3') )
 
-	ax.legend( (rects1[0], rects2[0], rects3[0], rects4[0]), ('spA', 'spB', 'pl1', 'pl2') )
+	ax.legend( (rects1[0], rects2[0], rects3[0], rects4[0]), ('pl1', 'pl2', 'spA', 'spB') )
 
 	plt.show()
 
@@ -98,15 +98,15 @@ def main():
 			print("Graph of Food Counts for B")
 			graph(food_countsB)
 			# Uncomment to run game between "best" species
-			# arena = aie.AIEnvironment([records["A"], records["B"]], True)
-			# print(best_fitA)
-			# print(best_fitB)
-			# networkA = NeuralNetwork(bestA)
-			# networkB = NeuralNetwork(bestB)
-			# specA = (POP_A, networkA)
-			# specB = (POP_B, networkB)
+			arena = aie.AIEnvironment([records["A"], records["B"]], True)
+			print(best_fitA)
+			print(best_fitB)
+			networkA = NeuralNetwork(bestA)
+			networkB = NeuralNetwork(bestB)
+			specA = (POP_A, networkA)
+			specB = (POP_B, networkB)
 
-			# arena.generate(DIM, specA, specB, NUM_FOOD_1, NUM_FOOD_2, STEPS)
+			arena.generate(DIM, specA, specB, NUM_FOOD_1, NUM_FOOD_2, STEPS)
 
 
 

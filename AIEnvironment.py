@@ -139,7 +139,7 @@ class AIEnvironment(object):
 			print("\n")
 
 		print(self.evaluateFitness())
-		time.sleep(0.1)
+		time.sleep(0.5)
 
 	def animalAction(self, animal):
 		"""
