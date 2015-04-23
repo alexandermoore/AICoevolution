@@ -5,17 +5,20 @@ import os
 from NeuralNetwork import *
 import AIEnvironment as aie
 import time
-import numpy as np
-import matplotlib.pyplot as plt
+try:
+	import numpy as np
+	import matplotlib.pyplot as plt
+except:
+	pass
 from collections import Counter
 
 data_file_name = "data/"
-DIM = 10
-POP_A = 10
-POP_B = 10
-NUM_FOOD_1 = 10
-NUM_FOOD_2 = 10
-STEPS = 30
+DIM = 50
+POP_A = 100
+POP_B = 100
+NUM_FOOD_1 = 100
+NUM_FOOD_2 = 100
+STEPS = 500
 
 def graph(food_counts):
 	spA = np.zeros(len(food_counts))
@@ -94,18 +97,23 @@ def main():
 						bestB = genB
 
 			print("Graph of Food Counts for A")
-			graph(food_countsA)
+			# graph(food_countsA)
 			print("Graph of Food Counts for B")
-			graph(food_countsB)
+			# graph(food_countsB)
 			# Uncomment to run game between "best" species
 			arena = aie.AIEnvironment([records["A"], records["B"]], True)
 			print(best_fitA)
 			print(best_fitB)
+			print(len(bestA))
+			print(len(bestB))
 			networkA = NeuralNetwork(bestA)
 			networkB = NeuralNetwork(bestB)
 			specA = (POP_A, networkA)
 			specB = (POP_B, networkB)
 
+			print("DISPLAYING BEST FOR PARAMS")
+			print(records["A"], records["B"])
+			time.sleep(5)
 			arena.generate(DIM, specA, specB, NUM_FOOD_1, NUM_FOOD_2, STEPS)
 
 

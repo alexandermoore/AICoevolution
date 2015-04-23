@@ -4,6 +4,7 @@ from AIFood import *
 from util import *
 import random as r
 import time
+from GraphicWrapper import *
 
 
 
@@ -15,7 +16,7 @@ class AIEnvironment(object):
 		None
 	"""
 
-	def __init__(self, food_mappings, display = False):
+	def __init__(self, food_mappings, display = False, use_tkinter = True):
 		"""
 		Initiailize game world
 
@@ -26,6 +27,7 @@ class AIEnvironment(object):
 		super(AIEnvironment, self).__init__()
 		self.food_mappings = food_mappings
 		self.will_display = display
+		self.use_tkinter = use_tkinter
 
 	def generatePosition(self, grid):
 		"""
@@ -78,6 +80,7 @@ class AIEnvironment(object):
 		self.food = []
 		self.world = [[None for x in range(grid)] for x in range(grid)]
 		self.space = grid * grid
+		self.steps = steps
 
 		# Set seed for world
 		r.seed(seed)
@@ -118,7 +121,10 @@ class AIEnvironment(object):
 
 			self.world[x][y] = food
 
-		self.runSteps(steps)
+		if self.use_tkinter:
+			self.runStepsTkinter()
+		else:
+			self.runSteps()
 		return self.evaluateFitness()
 
 	def display(self, val):
@@ -191,16 +197,39 @@ class AIEnvironment(object):
 			self.world[x][y] = None
 			self.world[x][y_space] = self.interact(animal, self.world[x][y_space])
 
-	def runSteps(self, steps):
+	def runSingleStepTkinter(self):
+		"""
+		For use with TKinter, which will handle the execution of multiple steps by itself.
+		"""
+		r.shuffle(self.animals)
+		for i in range(len(self.animals)):
+			animal = self.animals[i]
+
+			if animal.getPosition():
+				self.animalAction(animal)
+
+	def runStepsTkinter(self):
+		steps = self.steps
+		# Create wrapper for graphics
+		self.graphic_wrapper = GraphicWrapper(self.world, self.runSingleStepTkinter, steps)
+
+		if not self.will_display:
+			for j in range(steps):
+				runSingleStepTkinter()
+		else:
+			self.graphic_wrapper.run()
+
+
+	def runSteps(self):
 		"""
 		Per step has each animal make an action
 
 		Args:
 			steps: number of steps to run the world
 		"""
-
+		steps = self.steps
 		for j in range(steps):
-			self.display(self.will_display)
+			# self.display(self.will_display)
 			r.shuffle(self.animals)
 			for i in range(len(self.animals)):
 				animal = self.animals[i]
