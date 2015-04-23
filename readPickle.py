@@ -23,7 +23,7 @@ STEPS = 300
 BAR_GROUPS = 5
 
 
-def graph(food_counts, fit_counts):
+def graph(food_counts, fit_counts, title, prefix):
 	spA = np.zeros(BAR_GROUPS)
 	spB = np.zeros(BAR_GROUPS)
 	fd1 = np.zeros(BAR_GROUPS)
@@ -43,7 +43,6 @@ def graph(food_counts, fit_counts):
 	fd1 = fd1 / 40.0
 	fd2 = fd2 / 40.0
 
-
 	ind = np.arange(BAR_GROUPS)  # the x locations for the groups
 	width = 0.1       # the width of the bars
 
@@ -53,9 +52,11 @@ def graph(food_counts, fit_counts):
 	rects3 = ax.bar(ind+2*width, spA, width, color='r')
 	rects4 = ax.bar(ind+3*width, spB, width, color='b')
 
+	title = prefix + str(title).replace("fd", "pl")
 	# add some text for labels, title and axes ticks
 	ax.set_ylabel('Scores')
 	ax.set_xticks(ind+width)
+	ax.set_title(title)
 	ax.set_xticklabels( ('G1', 'G2', 'G3', 'G4', 'G5') )
 
 	ax.legend( (rects1[0], rects2[0], rects3[0], rects4[0]), ('pl1', 'pl2', 'spA', 'spB') )
@@ -75,6 +76,7 @@ def main():
 			stats = records["stat"]
 			genomesA = list(stats.keys())
 			genomesB = list(stats[genomesA[0]].keys())
+			print("File: " + f)
 
 			food_countsA = Counter()
 			food_countsB = Counter()
@@ -111,9 +113,9 @@ def main():
 
 			print("Graph of Food Counts for A")
 
-			# graph(food_countsA)
+			graph(food_countsA, fit_countsA, records["A"], "For spA: ")
 			print("Graph of Food Counts for B")
-			# graph(food_countsB)
+			graph(food_countsB, fit_countsB, records["B"], "For spB: ")
 			# Uncomment to run game between "best" species
 			arena = aie.AIEnvironment([records["A"], records["B"]], True)
 			print(best_fitA)
