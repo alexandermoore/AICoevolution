@@ -37,9 +37,9 @@ class GraphicWrapper:
 		elif obj.getType() == SPECIES_A:
 			color = "#ff0000"
 		elif obj.getType() == SPECIES_B:
-			color = "#aaaaff"
+			color = "#0000ff"
 		elif obj.getType() == FOOD_1:
-			color = "#aaffaa"
+			color = "#00ff00"
 		elif obj.getType() == FOOD_2:
 			color = "#ffff00"
 		return color
