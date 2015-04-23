@@ -16,35 +16,42 @@ POP_B = 10
 NUM_FOOD_1 = 10
 NUM_FOOD_2 = 10
 STEPS = 30
+BAR_GROUPS = 5
 
-def graph(food_counts):
-	spA = np.zeros(len(food_counts))
-	spB = np.zeros(len(food_counts))
-	fd1 = np.zeros(len(food_counts))
-	fd2 = np.zeros(len(food_counts))
+def graph(food_counts, fit_counts):
+	spA = np.zeros(BAR_GROUPS)
+	spB = np.zeros(BAR_GROUPS)
+	fd1 = np.zeros(BAR_GROUPS)
+	fd2 = np.zeros(BAR_GROUPS)
 
 	i = 0
-	for genA in food_counts:
+	for count in fit_counts.most_common(BAR_GROUPS):
+		genA = count[0]
 		spA[i] += food_counts[genA]["spA"]
 		spB[i] += food_counts[genA]["spB"]
 		fd1[i] += food_counts[genA]["fd1"]
 		fd2[i] += food_counts[genA]["fd2"]
 		i += 1
 
+	spA = spA / 40.0
+	spB = spB / 40.0
+	fd1 = fd1 / 40.0
+	fd2 = fd2 / 40.0
 
-	ind = np.arange(len(food_counts))  # the x locations for the groups
+
+	ind = np.arange(BAR_GROUPS)  # the x locations for the groups
 	width = 0.1       # the width of the bars
 
 	fig, ax = plt.subplots()
-	rects1 = ax.bar(ind, fd1, width, color='r')
+	rects1 = ax.bar(ind, fd1, width, color='g')
 	rects2 = ax.bar(ind+width, fd2, width, color='y')
-	rects3 = ax.bar(ind+2*width, spA, width, color='b')
-	rects4 = ax.bar(ind+3*width, spB, width, color='g')
+	rects3 = ax.bar(ind+2*width, spA, width, color='r')
+	rects4 = ax.bar(ind+3*width, spB, width, color='b')
 
 	# add some text for labels, title and axes ticks
 	ax.set_ylabel('Scores')
 	ax.set_xticks(ind+width)
-	ax.set_xticklabels( ('G1', 'G2', 'G3') )
+	ax.set_xticklabels( ('G1', 'G2', 'G3', 'G4', 'G5') )
 
 	ax.legend( (rects1[0], rects2[0], rects3[0], rects4[0]), ('pl1', 'pl2', 'spA', 'spB') )
 
@@ -66,6 +73,8 @@ def main():
 
 			food_countsA = Counter()
 			food_countsB = Counter()
+			fit_countsA = Counter()
+			fit_countsB = Counter()
 
 			# print("\nFood counts:")
 			for genA in genomesA:
@@ -73,6 +82,9 @@ def main():
 					fitA = stats[genA][genB][0]
 					fitB = stats[genA][genB][1]
 					food_counts = stats[genA][genB][2]["food_counts"]
+
+					fit_countsA[genA] += fitA
+					fit_countsB[genB] += fitB
 
 					if not genA in food_countsA.keys():
 						food_countsA[genA] = Counter(food_counts["spA"])
@@ -93,9 +105,9 @@ def main():
 						bestB = genB
 
 			print("Graph of Food Counts for A")
-			graph(food_countsA)
+			graph(food_countsA, fit_countsA)
 			print("Graph of Food Counts for B")
-			graph(food_countsB)
+			graph(food_countsB, fit_countsB)
 			# Uncomment to run game between "best" species
 			arena = aie.AIEnvironment([records["A"], records["B"]], True)
 			print(best_fitA)
