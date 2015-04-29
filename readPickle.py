@@ -117,7 +117,7 @@ def main():
 			print("Graph of Food Counts for B")
 			graph(food_countsB, fit_countsB, records["B"], "For spB: ")
 			# Uncomment to run game between "best" species
-			arena = aie.AIEnvironment([records["A"], records["B"]], True)
+			arena = aie.AIEnvironment([records["A"], records["B"]], True, True)
 			print(best_fitA)
 			print(best_fitB)
 			print(len(bestA))

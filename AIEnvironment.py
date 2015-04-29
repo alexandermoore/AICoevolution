@@ -16,7 +16,7 @@ class AIEnvironment(object):
 		None
 	"""
 
-	def __init__(self, food_mappings, display = False, use_tkinter = True):
+	def __init__(self, food_mappings, display = False, use_tkinter = False):
 		"""
 		Initiailize game world
 
