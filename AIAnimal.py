@@ -1,5 +1,5 @@
 from AIObject import *
-from util import *
+import util
 import random as r
 
 class AIAnimal(AIObject):
@@ -28,8 +28,8 @@ class AIAnimal(AIObject):
 		self.food_counts = {}
 		for food in self.mapping:
 			self.food_counts[food] = 0
-		self.sight_range = GLOBAL_PARAMS[GLOBAL_PARAM_NAME][name]["sight_range"]
-		self.move_speed = GLOBAL_PARAMS[GLOBAL_PARAM_NAME][name]["move_speed"]
+		self.sight_range = util.GLOBAL_PARAMS[util.GLOBAL_PARAM_NAME][name]["sight_range"]
+		self.move_speed = util.GLOBAL_PARAMS[util.GLOBAL_PARAM_NAME][name]["move_speed"]
 
 
 	def __get_input_off(self, obj):
@@ -38,13 +38,13 @@ class AIAnimal(AIObject):
 		"""
 		if not obj:
 			return None
-		if (obj.getType() == SPECIES_A):
+		if (obj.getType() == util.SPECIES_A):
 			return 0
-		elif (obj.getType() == SPECIES_B):
+		elif (obj.getType() == util.SPECIES_B):
 			return 1
-		elif (obj.getType() == FOOD_1):
+		elif (obj.getType() == util.FOOD_1):
 			return 2
-		elif (obj.getType() == FOOD_2):
+		elif (obj.getType() == util.FOOD_2):
 			return 3
 		raise Exception("INVALID OBJ TYPE {0}".format(obj))
 
@@ -72,6 +72,7 @@ class AIAnimal(AIObject):
 
 		# See 2 squares ahead
 		sight_range = self.sight_range
+
 		env = [((x+i), (y+j)) for i in range(-sight_range, sight_range + 1) for j in range(-sight_range, sight_range + 1) if (i,j) != (x,y)]
 		# env = list(map((lambda x: (x[0] % length, x[1] % length)), env))
 
@@ -147,7 +148,7 @@ class AIAnimal(AIObject):
 		food.die()
 
 	def __str__(self):
-		if USE_COLORS:
+		if util.USE_COLORS:
 			color_a = '\033[94m'
 			color_b = '\033[0m'
 			if (self.getType() == "spA"):
