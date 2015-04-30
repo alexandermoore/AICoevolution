@@ -16,7 +16,7 @@ class AIEnvironment(object):
 		None
 	"""
 
-	def __init__(self, food_mappings, display = False, use_tkinter = False):
+	def __init__(self, food_mappings, display = False, use_tkinter = True):
 		"""
 		Initiailize game world
 
@@ -121,7 +121,7 @@ class AIEnvironment(object):
 
 			self.world[x][y] = food
 
-		if self.use_tkinter:
+		if self.use_tkinter and self.will_display:
 			self.runStepsTkinter()
 		else:
 			self.runSteps()
@@ -156,46 +156,60 @@ class AIEnvironment(object):
 		"""
 
 		action = animal.run(self.world)
+		move_speed = animal.move_speed
 
 		# Move EAST
 		if action == 0:
 			(x,y) = animal.getPosition()
-			animal.setPosition(((x+1) % len(self.world),y))
+			animal.setPosition(((x+move_speed) % len(self.world),y))
+			(destx, desty) = animal.getPosition()
 
 			self.world[x][y] = None
-			self.world[(x+1) % len(self.world)][y] = self.interact(animal, self.world[(x+1) % len(self.world)][y])
+			for k in range(1, move_speed + 1):
+				self.interact(animal, self.world[(x+k) % len(self.world)][y])
+				self.world[(x+k) % len(self.world)][y] = None
+			animal.setPosition((destx, desty))
+			self.world[destx][desty] = animal
 
 		# Move WEST
 		elif action == 1:
 			(x,y) = animal.getPosition()
-			animal.setPosition(( (x-1) % len(self.world) ,y))
+			animal.setPosition(( (x-move_speed) % len(self.world) ,y))
+			(destx, desty) = animal.getPosition()
 
 			self.world[x][y] = None
 
-			x_space = x - 1
-			if (x_space < 0):
-				x_space = len(self.world) - 1
-			self.world[x_space][y] = self.interact(animal, self.world[x_space][y])
+			for k in range(1, move_speed + 1):
+				self.interact(animal, self.world[(x-k) % len(self.world)][y])
+				self.world[(x-k) % len(self.world)][y] = None
+			animal.setPosition((destx, desty))
+			self.world[destx][desty] = animal
 
 		# Move NORTH
 		elif action == 2:
 			(x,y) = animal.getPosition()
-			animal.setPosition((x,(y+1) % len(self.world)))
+			animal.setPosition((x,(y+move_speed) % len(self.world)))
+			(destx, desty) = animal.getPosition()
 
 			self.world[x][y] = None
-			self.world[x][(y+1) % len(self.world)] = self.interact(animal, self.world[x][(y+1) % len(self.world)])
+			for k in range(1, move_speed + 1):
+				self.interact(animal, self.world[x][(y+k) % len(self.world[0])])
+				self.world[x][(y+k) % len(self.world[0])] = None
+			animal.setPosition((destx, desty))
+			self.world[destx][desty] = animal
 
 		# Move SOUTH
 		elif action == 3:
 			(x,y) = animal.getPosition()
-			animal.setPosition((x,(y-1) % len(self.world[0])))
-
-			y_space = y - 1
-			if (y_space < 0):
-				y_space = len(self.world[0]) - 1
+			animal.setPosition((x,(y-move_speed) % len(self.world[0])))
+			(destx, desty) = animal.getPosition()
 
 			self.world[x][y] = None
-			self.world[x][y_space] = self.interact(animal, self.world[x][y_space])
+			for k in range(1, move_speed + 1):
+				self.interact(animal, self.world[x][(y-k) % len(self.world[0])])
+				self.world[x][(y-k) % len(self.world[0])] = None
+			animal.setPosition((destx, desty))
+			self.world[destx][desty] = animal
 
 	def runSingleStepTkinter(self):
 		"""

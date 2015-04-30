@@ -23,15 +23,15 @@ speciesB_map["spB"] = -50
 speciesB_map["fd1"] = 5
 speciesB_map["fd2"] = 5
 
-DIM = 10
+DIM = 100
 # All this is just to maintain the same proportion of each species that you had when the world was 100x100.
 # You had 1500 of each in a 100x100 world, so here I'm just scaling it up/down based on the actual dimension.
-POP_A = 5
-POP_B = 5
+POP_A = 500
+POP_B = 500
 NUM_FOOD_1 = 10
 NUM_FOOD_2 = 10
 STEPS = int(DIM**2 / 4)
-NUM_GENERATIONS = 1000
+NUM_GENERATIONS = 1
 NUM_GENOMES = 40
 
 if __name__ == '__main__':
@@ -39,13 +39,13 @@ if __name__ == '__main__':
 	#p_range = range(-100, 101, 50)
 	#params = itertools.product(p_range, p_range, p_range, p_range, p_range, p_range, p_range, p_range)
 	#params = [[-10000,100,2,0,  0,-10000,0,200]]
-	params = [[-100,-100,0,100,-100,-100,100,0]]
+	params = [("independent_herbivores",[-100,-100,0,100,-100,-100,100,0])]
 
 	# p_range = range(-100, 101, 50)
 	# params = itertools.product(p_range, p_range, p_range, p_range, p_range, p_range, p_range, p_range)
 	# params = [[-100,100,0,0,0,-100,100,20], [-100,0,100,20,100,-100,0,0], [-100,-100,0,50,-100,-100,50,0], [-100,-100,0,50,-100,-100,50,0], [100,100,0,50,-100,-100,50,0]]
 
-	data_file_name = "data"
+	data_file_name = "data_" + GLOBAL_PARAM_NAME
 	now = str(datetime.now())
 	file_no = 0
 
@@ -56,7 +56,7 @@ if __name__ == '__main__':
 	if not os.path.exists(data_file_name + "/" + now):
 		os.makedirs(data_file_name + "/" + now)
 
-	for param in params:
+	for paramname, param in params:
 		print(param)
 		speciesA_map["spA"] = param[0]
 		speciesA_map["spB"] = param[1]
@@ -76,7 +76,7 @@ if __name__ == '__main__':
 
 		for gen in range(NUM_GENERATIONS):
 			print("GENERATION: " + str(gen))
-			arena = aie.AIEnvironment([speciesA_map, speciesB_map])
+			arena = aie.AIEnvironment([speciesA_map, speciesB_map], display=True)
 			# fit_countA = [(0.0,0.0)] * len(genomesA)
 			# fit_countB = [(0.0,0.0)] * len(genomesB)
 			fit_countA = [0] * len(genomesA)
@@ -117,6 +117,6 @@ if __name__ == '__main__':
 			genomesA = evolverA.evolve(fitnessA)
 			genomesB = evolverB.evolve(fitnessB)
 
-		pickle.dump({"A" : speciesA_map, "B" : speciesB_map, "stat": stats_record}, open(data_file_name + "/" + now + "/" + str(file_no), "wb"))
+		pickle.dump({"A" : speciesA_map, "B" : speciesB_map, "stat": stats_record}, open(data_file_name + "/" + now + "/" + paramname, "wb"))
 		print(stats_record)
 		file_no += 1
