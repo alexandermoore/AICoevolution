@@ -73,6 +73,7 @@ def main():
 			records = pickle.load(open(data_file_name+directory+"/"+f, "rb"))
 			print("\n\nFood params:")
 			print(records["A"], records["B"])
+			print("File: " + f)
 			stats = records["stat"]
 			genomesA = list(stats.keys())
 			genomesB = list(stats[genomesA[0]].keys())
@@ -110,11 +111,11 @@ def main():
 						best_fitB = fitB
 						bestB = genB
 
-			# print("Graph of Food Counts for A")
+			print("Graph of Food Counts for A")
 
-			# graph(food_countsA, fit_countsA, records["A"], "For spA: ")
-			# print("Graph of Food Counts for B")
-			# graph(food_countsB, fit_countsB, records["B"], "For spB: ")
+			graph(food_countsA, fit_countsA, records["A"], "For spA: ")
+			print("Graph of Food Counts for B")
+			graph(food_countsB, fit_countsB, records["B"], "For spB: ")
 			# Uncomment to run game between "best" species
 			arena = aie.AIEnvironment([records["A"], records["B"]], True, True)
 			# # print(best_fitA)

@@ -13,6 +13,7 @@ except:
 from collections import Counter
 
 data_file_name = "data/"
+out_file_dir = "present-data/Awesome/"
 
 DIM = 50
 POP_A = 100
@@ -131,6 +132,12 @@ def main():
 			print(records["A"], records["B"])
 			time.sleep(5)
 			arena.generate(DIM, specA, specB, NUM_FOOD_1, NUM_FOOD_2, STEPS)
+
+			change = input("Change file name: ")
+
+			if (change == "y"):
+				new_name = input("New Name: ")
+				pickle.dump(records, open(out_file_dir + new_name, "wb"))
 
 
 
