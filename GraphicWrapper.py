@@ -2,7 +2,7 @@ import tkinter as Tkinter
 from util import *
 
 WINDOWSIZE = 600
-DRAW_DELAY = 1000
+DRAW_DELAY = 100
 class GraphicWrapper:
 
 	def __init__(self, world, per_step_fn, num_steps):
