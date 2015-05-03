@@ -44,7 +44,7 @@ if __name__ == '__main__':
 		#p_range = range(-100, 101, 50)
 		#params = itertools.product(p_range, p_range, p_range, p_range, p_range, p_range, p_range, p_range)
 		#params = [[-10000,100,2,0,  0,-10000,0,200]]
-		params = [("independent_herbivores",[-100,-100,0,100,-100,-100,100,0])]
+		params = [("b_and_a_compete",[-100,-50,100,0,-50,-100,100,0])]
 
 		# p_range = range(-100, 101, 50)
 		# params = itertools.product(p_range, p_range, p_range, p_range, p_range, p_range, p_range, p_range)
