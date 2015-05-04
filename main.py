@@ -35,7 +35,7 @@ NUM_GENERATIONS = 1000
 NUM_GENOMES = 40
 
 if __name__ == '__main__':
-	global_param_names = [k for k in util.GLOBAL_PARAMS.keys() if k != "normal"] # list of all except "normal"
+	global_param_names = ["B_fast"]#[k for k in util.GLOBAL_PARAMS.keys() if k != "normal"] # list of all except "normal"
 
 	# Iterate over all global parameter names
 	for global_param_name in global_param_names:
@@ -44,7 +44,9 @@ if __name__ == '__main__':
 		#p_range = range(-100, 101, 50)
 		#params = itertools.product(p_range, p_range, p_range, p_range, p_range, p_range, p_range, p_range)
 		#params = [[-10000,100,2,0,  0,-10000,0,200]]
-		params = [("b_and_a_compete",[-100,-50,100,0,-50,-100,100,0])]
+
+		params = [("a_hunts_b_rush",[-100, 100, 0, 0, 0, -100, 100, 50])]
+
 
 		# p_range = range(-100, 101, 50)
 		# params = itertools.product(p_range, p_range, p_range, p_range, p_range, p_range, p_range, p_range)

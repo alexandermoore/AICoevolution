@@ -5,6 +5,7 @@ import os
 from NeuralNetwork import *
 import AIEnvironment as aie
 import time
+HAS_NUMPY = False
 try:
 	import numpy as np
 	import matplotlib.pyplot as plt
@@ -111,11 +112,11 @@ def main():
 						best_fitB = fitB
 						bestB = genB
 
-			print("Graph of Food Counts for A")
-
-			graph(food_countsA, fit_countsA, records["A"], "For spA: ")
-			print("Graph of Food Counts for B")
-			graph(food_countsB, fit_countsB, records["B"], "For spB: ")
+			if HAS_NUMPY:
+				print("Graph of Food Counts for A")
+				graph(food_countsA, fit_countsA, records["A"], "For spA: ")
+				print("Graph of Food Counts for B")
+				graph(food_countsB, fit_countsB, records["B"], "For spB: ")
 			# Uncomment to run game between "best" species
 			arena = aie.AIEnvironment([records["A"], records["B"]], True, True)
 			# # print(best_fitA)
