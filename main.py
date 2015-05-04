@@ -44,7 +44,9 @@ if __name__ == '__main__':
 		#p_range = range(-100, 101, 50)
 		#params = itertools.product(p_range, p_range, p_range, p_range, p_range, p_range, p_range, p_range)
 		#params = [[-10000,100,2,0,  0,-10000,0,200]]
+
 		params = [("a_hunts_b_rush",[-100, 100, 0, 0, 0, -100, 100, 50])]
+
 
 		# p_range = range(-100, 101, 50)
 		# params = itertools.product(p_range, p_range, p_range, p_range, p_range, p_range, p_range, p_range)
