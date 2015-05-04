@@ -34,6 +34,10 @@ GLOBAL_PARAMS = {
 	"A_fast": {
 		SPECIES_A: {"sight_range": 2, "move_speed": 2},
 		SPECIES_B: {"sight_range": 2, "move_speed": 1}
+	},
+	"B_fast": {
+		SPECIES_A: {"sight_range": 2, "move_speed": 1},
+		SPECIES_B: {"sight_range": 2, "move_speed": 2}
 	}
 }
 
