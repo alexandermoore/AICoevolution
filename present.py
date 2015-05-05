@@ -5,13 +5,14 @@ import os
 from NeuralNetwork import *
 import AIEnvironment as aie
 import time
-HAS_NUMPY = False
+import util
 try:
 	import numpy as np
 	import matplotlib.pyplot as plt
 except:
 	pass
 from collections import Counter
+
 
 data_file_name = "present-data/"
 
@@ -67,13 +68,16 @@ def graph(food_counts, fit_counts, title, prefix):
 def main():
 	for directory in os.listdir(data_file_name):
 		for f in os.listdir(data_file_name+directory):
+			global_param_name, fname = f.split("-")
+			util.GLOBAL_PARAM_NAME = global_param_name
 			bestA = None
 			best_fitA = float("-inf")
 			bestB = None
 			best_fitB = float("-inf")
-			records = pickle.load(open(data_file_name+directory+"/"+f, "rb"))
+			records = pickle.load(open(data_file_name+directory+"/"+fname, "rb"))
 			print("\n\nFood params:")
 			print(records["A"], records["B"])
+			print("Global Param:",global_param_name)
 			print("File: " + f)
 			stats = records["stat"]
 			genomesA = list(stats.keys())
@@ -112,11 +116,13 @@ def main():
 						best_fitB = fitB
 						bestB = genB
 
-			if HAS_NUMPY:
+			try:
 				print("Graph of Food Counts for A")
 				graph(food_countsA, fit_countsA, records["A"], "For spA: ")
 				print("Graph of Food Counts for B")
 				graph(food_countsB, fit_countsB, records["B"], "For spB: ")
+			except:
+				pass
 			# Uncomment to run game between "best" species
 			arena = aie.AIEnvironment([records["A"], records["B"]], True, True)
 			# # print(best_fitA)
