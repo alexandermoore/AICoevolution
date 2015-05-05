@@ -74,11 +74,11 @@ def main():
 			best_fitA = float("-inf")
 			bestB = None
 			best_fitB = float("-inf")
-			records = pickle.load(open(data_file_name+directory+"/"+fname, "rb"))
+			records = pickle.load(open(data_file_name+directory+"/"+f, "rb"))
 			print("\n\nFood params:")
 			print(records["A"], records["B"])
 			print("Global Param:",global_param_name)
-			print("File: " + f)
+			print("File: " + fname)
 			stats = records["stat"]
 			genomesA = list(stats.keys())
 			genomesB = list(stats[genomesA[0]].keys())
