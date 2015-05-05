@@ -13,7 +13,7 @@ except:
 	pass
 from collections import Counter
 
-util.GLOBAL_PARAM_NAME = "A_fast"
+util.GLOBAL_PARAM_NAME = "B_fast"
 data_file_name = "data_" + util.GLOBAL_PARAM_NAME + "/"
 out_file_dir = "present-data/Awesome/"
 
@@ -116,9 +116,9 @@ def main():
 
 			print("Graph of Food Counts for A")
 
-			#graph(food_countsA, fit_countsA, records["A"], "For spA: ")
+			graph(food_countsA, fit_countsA, records["A"], "For spA: ")
 			print("Graph of Food Counts for B")
-			#graph(food_countsB, fit_countsB, records["B"], "For spB: ")
+			graph(food_countsB, fit_countsB, records["B"], "For spB: ")
 			# Uncomment to run game between "best" species
 			arena = aie.AIEnvironment([records["A"], records["B"]], True, True)
 			print(best_fitA)
