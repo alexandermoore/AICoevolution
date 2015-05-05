@@ -15,6 +15,7 @@ from collections import Counter
 
 
 data_file_name = "present-data/"
+figure_dir_name = "present-data/Awesome/figures/"
 
 DIM = 50
 POP_A = 100
@@ -25,7 +26,7 @@ STEPS = 300
 BAR_GROUPS = 5
 
 
-def graph(food_counts, fit_counts, title, prefix):
+def graph(food_counts, fit_counts, title, prefix, f):
 	spA = np.zeros(BAR_GROUPS)
 	spB = np.zeros(BAR_GROUPS)
 	fd1 = np.zeros(BAR_GROUPS)
@@ -63,11 +64,15 @@ def graph(food_counts, fit_counts, title, prefix):
 
 	ax.legend( (rects1[0], rects2[0], rects3[0], rects4[0]), ('pl1', 'pl2', 'spA', 'spB') )
 
+	plt.savefig(figure_dir_name + f)
 	plt.show()
 
 def main():
 	for directory in os.listdir(data_file_name):
 		for f in os.listdir(data_file_name+directory):
+			if (f != "A_fast-a_hunts_b_quickly"):
+				continue
+
 			global_param_name, fname = f.split("-")
 			util.GLOBAL_PARAM_NAME = global_param_name
 			bestA = None
@@ -118,9 +123,9 @@ def main():
 
 			try:
 				print("Graph of Food Counts for A")
-				graph(food_countsA, fit_countsA, records["A"], "For spA: ")
+				graph(food_countsA, fit_countsA, records["A"], "For spA: ", f+"_spA.png")
 				print("Graph of Food Counts for B")
-				graph(food_countsB, fit_countsB, records["B"], "For spB: ")
+				graph(food_countsB, fit_countsB, records["B"], "For spB: ", f+"_spB.png")
 			except:
 				pass
 			# Uncomment to run game between "best" species
