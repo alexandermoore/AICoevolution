@@ -128,12 +128,8 @@ def main():
 				graph(food_countsB, fit_countsB, records["B"], "For spB: ", f+"_spB.png")
 			except:
 				pass
-			# Uncomment to run game between "best" species
+
 			arena = aie.AIEnvironment([records["A"], records["B"]], True, True)
-			# # print(best_fitA)
-			# print(best_fitB)
-			# print(len(bestA))
-			# print(len(bestB))
 			networkA = NeuralNetwork(bestA)
 			networkB = NeuralNetwork(bestB)
 			specA = (POP_A, networkA)
@@ -141,10 +137,7 @@ def main():
 
 			print("DISPLAYING BEST FOR PARAMS")
 			print(records["A"], records["B"])
-			time.sleep(5)
 			arena.generate(DIM, specA, specB, NUM_FOOD_1, NUM_FOOD_2, STEPS)
-
-
 
 if __name__ == '__main__':
 	main()

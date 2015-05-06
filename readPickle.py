@@ -25,7 +25,6 @@ NUM_FOOD_2 = 100
 STEPS = 300
 BAR_GROUPS = 5
 
-
 def graph(food_counts, fit_counts, title, prefix):
 	spA = np.zeros(BAR_GROUPS)
 	spB = np.zeros(BAR_GROUPS)
@@ -56,6 +55,7 @@ def graph(food_counts, fit_counts, title, prefix):
 	rects4 = ax.bar(ind+3*width, spB, width, color='b')
 
 	title = prefix + str(title).replace("fd", "pl")
+
 	# add some text for labels, title and axes ticks
 	ax.set_ylabel('Scores')
 	ax.set_xticks(ind+width)
@@ -115,16 +115,11 @@ def main():
 						bestB = genB
 
 			print("Graph of Food Counts for A")
-
 			graph(food_countsA, fit_countsA, records["A"], "For spA: ")
 			print("Graph of Food Counts for B")
 			graph(food_countsB, fit_countsB, records["B"], "For spB: ")
-			# Uncomment to run game between "best" species
+
 			arena = aie.AIEnvironment([records["A"], records["B"]], True, True)
-			print(best_fitA)
-			print(best_fitB)
-			print(len(bestA))
-			print(len(bestB))
 			networkA = NeuralNetwork(bestA)
 			networkB = NeuralNetwork(bestB)
 			specA = (POP_A, networkA)
@@ -132,7 +127,6 @@ def main():
 
 			print("DISPLAYING BEST FOR PARAMS")
 			print(records["A"], records["B"])
-			time.sleep(5)
 			arena.generate(DIM, specA, specB, NUM_FOOD_1, NUM_FOOD_2, STEPS)
 
 			change = input("Change file name: ")
@@ -140,8 +134,6 @@ def main():
 			if (change == "y"):
 				new_name = input("New Name: ")
 				pickle.dump(records, open(out_file_dir + new_name, "wb"))
-
-
 
 if __name__ == '__main__':
 	main()
