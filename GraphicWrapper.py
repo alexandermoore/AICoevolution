@@ -1,14 +1,17 @@
 import tkinter as Tkinter
+import os
 from util import *
 
 WINDOWSIZE = 600
 DRAW_DELAY = 100
 class GraphicWrapper:
 
-	def __init__(self, world, per_step_fn, num_steps):
+	def __init__(self, world, per_step_fn, num_steps, out_file = None):
 		self.worldszx = len(world)
 		self.worldszy = len(world[0])
 		self.world = world
+		self.file = out_file
+		self.image = 0
 
 		self.update_sim_fn = per_step_fn
 		self.num_steps = num_steps
@@ -51,6 +54,10 @@ class GraphicWrapper:
 					fill=self.getColor(self.world[x][y]),
 					outline='#aaaaaa',
 					width=1)
+		if self.file != None:
+			self.canvas.update()
+			self.canvas.postscript(file="images/"+str(self.image).zfill(3)+".ps", colormode='color')
+			self.image += 1
 
 	def update(self):
 		self.curr_step += 1
@@ -63,3 +70,7 @@ class GraphicWrapper:
 	def run(self):
 		self.update()
 		Tkinter.mainloop()
+		if (self.file != None):
+			os.system("convert images/*.ps -quality 100 " + self.file + ".gif")
+			os.system("rm -f images/*.ps")
+

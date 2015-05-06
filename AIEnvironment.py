@@ -16,7 +16,7 @@ class AIEnvironment(object):
 		None
 	"""
 
-	def __init__(self, food_mappings, display = False, use_tkinter = True):
+	def __init__(self, food_mappings, display = False, use_tkinter = True, name = None):
 		"""
 		Initiailize game world
 
@@ -28,6 +28,7 @@ class AIEnvironment(object):
 		self.food_mappings = food_mappings
 		self.will_display = display
 		self.use_tkinter = use_tkinter
+		self.name = name
 
 	def generatePosition(self, grid):
 		"""
@@ -225,7 +226,7 @@ class AIEnvironment(object):
 	def runStepsTkinter(self):
 		steps = self.steps
 		# Create wrapper for graphics
-		self.graphic_wrapper = GraphicWrapper(self.world, self.runSingleStepTkinter, steps)
+		self.graphic_wrapper = GraphicWrapper(self.world, self.runSingleStepTkinter, steps, self.name)
 
 		if not self.will_display:
 			for j in range(steps):
